@@ -9,8 +9,8 @@ exports.up = function(knex) {
         table.string('password').notNullable();
         table.char('phone_number', 11).notNullable(); 
         table.string('email').notNullable();
-        table.string('title').notNullable();  
-        table.text('content').notNullable(); 
+        table.string('inquiry_title').notNullable();  
+        table.text('inquiry_content').notNullable(); 
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.fn.now()).onUpdate(knex.fn.now());
     });
