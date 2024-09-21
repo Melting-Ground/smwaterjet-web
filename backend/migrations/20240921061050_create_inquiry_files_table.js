@@ -8,7 +8,6 @@ exports.up = function(knex) {
         table.integer('inquiry_id').notNullable().references('id').inTable('inquiries');
         table.string('inquiry_file_title').notNullable(); 
         table.string('inquiry_file_path').notNullable(); 
-        table.timestamp('upload_at').defaultTo(knex.fn.now());
     });
 };
 
