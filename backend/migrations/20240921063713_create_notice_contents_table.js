@@ -4,7 +4,7 @@
  */
 exports.up = function(knex) {
     return knex.schema.createTable('notice_contents', function(table) {
-        table.integer('notice_id').primary();
+        table.integer('notice_id').unsigned().primary();
         table.binary('notice_content').notNullable(); 
         table.foreign('notice_id').references('id').inTable('notices'); 
     });

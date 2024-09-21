@@ -6,7 +6,7 @@ exports.up = function(knex) {
     return knex.schema.createTable('reports', function(table) {
         table.increments('id').primary(); 
         table.string('report_title').notNullable();
-        table.year('report_year').notNullable(); 
+        table.integer('report_year').notNullable(); 
         table.timestamp('uploaded_at').defaultTo(knex.fn.now());
     });
 };

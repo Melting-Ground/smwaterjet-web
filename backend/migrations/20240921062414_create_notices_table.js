@@ -7,7 +7,6 @@ exports.up = function(knex) {
         table.increments('id').primary(); 
         table.string('notie_title').notNullable(); 
         table.timestamp('created_at').defaultTo(knex.fn.now()); 
-        table.timestamp('updated_at').defaultTo(knex.fn.now()).onUpdate(knex.fn.now()); 
     });
 };
 

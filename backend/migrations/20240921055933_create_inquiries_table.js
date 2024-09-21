@@ -7,12 +7,11 @@ exports.up = function(knex) {
         table.increments('id').primary();
         table.string('username').notNullable(); 
         table.string('password').notNullable();
-        table.char('phone_number', 11).notNullable(); 
+        table.string('phone_number', 11).notNullable(); 
         table.string('email').notNullable();
         table.string('inquiry_title').notNullable();  
         table.text('inquiry_content').notNullable(); 
         table.timestamp('created_at').defaultTo(knex.fn.now());
-        table.timestamp('updated_at').defaultTo(knex.fn.now()).onUpdate(knex.fn.now());
     });
 };
 

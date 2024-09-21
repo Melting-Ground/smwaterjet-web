@@ -10,9 +10,11 @@ exports.seed = async function(knex) {
   await knex('admins').del()
 
   const hashedPassword = await argon2.hash(process.env.INITIAL_PASSWORD);
+  const phoneNumberChan = process.env.NUMBER_CHAN
+  const phoneNumberMaster = process.env.NUMBER_MASTER
 
   await knex('admins').insert([
-    {phone_number: process.env.NUMBER_CHAN, password_hash: hashedPassword},
-    {phone_number: process.env.NUMBER_MASTER, password_hash: hashedPassword}
+    {phone_number: phoneNumberChan, password_hash: hashedPassword},
+    {phone_number: phoneNumberMaster, password_hash: hashedPassword}
   ]);
 };
