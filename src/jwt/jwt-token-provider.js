@@ -3,14 +3,15 @@ const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRETKEY;
 
 const generateToken = (admin) => {
-    return jwt.sign({ id: admin.phoneNumber }, secretKey, { expiresIn: '1h' });
+    return jwt.sign({ id: admin.phoneNumber }, secretKey, { expiresIn: '3h' });
 };
   
 const verifyToken = (token) => {
     try {
-      return jwt.verify(token, secretKey);
+      jwt.verify(token, secretKey);
+      return true;
     } catch (error) {
-      throw new Error('Invalid token');
+      return false;
     }
 };
 
