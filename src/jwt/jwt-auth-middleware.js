@@ -1,11 +1,11 @@
 const AuthorizationHeader = require('./authorization-header'); 
-const { verifyToken } = require('./jwt/jwt-token-provider'); 
+const tokenVerifier = require('./jwt/jwt-token-provider'); 
 
 const authenticateToken = (req, res, next) => {
     const authHeader = new AuthorizationHeader(req.headers['authorization']);
     const token = authHeader.getToken(); 
 
-    const verified = verifyToken(token); 
+    const verified = tokenVerifier.verifyToken(token); 
     req.admin = verified;
 
     if (!isValid) {
