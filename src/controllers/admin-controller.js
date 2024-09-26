@@ -1,5 +1,5 @@
-const AdminDTO = require('../dtos/admin-dto/admin-dto');
-const adminService = require('../services/admin-service');
+const AdminDTO = require('@dtos/admin-dto/admin-dto');
+const adminService = require('@services/admin-service');
 
 const loginAdmin = async (req, res) => {
   const adminDto = new AdminDTO(req.body);

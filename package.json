@@ -18,5 +18,14 @@
     "module-alias": "^2.2.3",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.3"
+  },
+  "_moduleAliases": {
+    "@src": "src",
+    "@controllers": "src/controllers",
+    "@models": "src/models",
+    "@services": "src/services",
+    "@dtos": "src/dtos",
+    "@routes": "src/routes",
+    "@configs": "src/configs"
   }
 }

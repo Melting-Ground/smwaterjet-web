@@ -1,6 +1,8 @@
 require('dotenv').config();
+require('module-alias/register');
+
 const express = require('express');
-const adminRoutes = require('./routes/admin-routes'); 
+const adminRoutes = require('@routes/admin-routes'); 
 
 const app = express();
 
