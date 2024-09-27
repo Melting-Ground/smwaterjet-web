@@ -1,5 +1,5 @@
-const AuthorizationHeader = require('./authorization-header'); 
-const tokenVerifier = require('./jwt/jwt-token-provider'); 
+const AuthorizationHeader = require('@jwt/authorization-header'); 
+const tokenVerifier = require('@jwt/jwt-token-provider'); 
 
 const authenticateToken = (req, res, next) => {
     const authHeader = new AuthorizationHeader(req.headers['authorization']);

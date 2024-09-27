@@ -1,5 +1,7 @@
 require('dotenv').config();
 require('module-alias/register');
+const exceptionHandler = require('@middlewares/exception-handler'); 
+
 
 const express = require('express');
 const adminRoutes = require('@routes/admin-routes'); 
@@ -11,6 +13,8 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.json());
 
 app.use('/admins', adminRoutes); 
+
+app.use(exceptionHandler);
 
 app.listen(app.get('port'), () => {
   console.log('Express server listening on port ' + app.get('port'));

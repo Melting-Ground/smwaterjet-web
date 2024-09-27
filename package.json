@@ -26,6 +26,9 @@
     "@services": "src/services",
     "@dtos": "src/dtos",
     "@routes": "src/routes",
-    "@configs": "src/configs"
+    "@configs": "src/configs",
+    "@jwt": "src/jwt",
+    "@middlewares": "src/middlewares",
+    "@exceptions": "src/exceptions"
   }
 }
