@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const Exception = require('../exceptions/exceptions');
 
 const secretKey = process.env.JWT_SECRETKEY;
 
@@ -9,9 +10,8 @@ const generateToken = (admin) => {
 const verifyToken = (token) => {
     try {
       jwt.verify(token, secretKey);
-      return true;
     } catch (error) {
-      return false;
+      throw new Exception('AuthenticationException', 'Invalid token');
     }
 };
 

@@ -1,19 +1,13 @@
 const AuthorizationHeader = require('@jwt/authorization-header'); 
 const tokenVerifier = require('@jwt/jwt-token-provider'); 
-const Exception = require('../exceptions/exceptions');
 
-const authenticateToken = (req, res, next) => {
+const authenticate = (req, res, next) => {
     const authHeader = new AuthorizationHeader(req.headers['authorization']);
     const token = authHeader.getToken(); 
 
-    const verified = tokenVerifier.verifyToken(token); 
-    req.admin = verified;
+    tokenVerifier.verifyToken(token); 
 
-    if (isValid == false) {
-        throw new Exception('AuthenticationException', 'Invalid credentials');
-    }
-    
     next();
 };
 
-module.exports = authenticateToken;
+module.exports = authenticate;
