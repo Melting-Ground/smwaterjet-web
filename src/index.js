@@ -5,6 +5,7 @@ const exceptionHandler = require('@middlewares/exception-handler');
 
 const express = require('express');
 const adminRoutes = require('@routes/admin-routes'); 
+const certificateRoutes = require('@routes/certificate-routes');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.json());
 
 app.use('/admins', adminRoutes); 
+app.use('/company', certificateRoutes);
 
 app.use(exceptionHandler);
 

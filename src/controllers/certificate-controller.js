@@ -1,5 +1,5 @@
-const CertificateDto = require('@dtos/certificate-dot/certificate-dto')
-const CertiResDto = require('@dtos/certificate-res-dto/certificate-res-dto')
+const CertificateDto = require('@dtos/certificate-dto/certificate-dto')
+const certificateService = require('@services/certificate-service');
 
 
 class CertificateController {
@@ -13,8 +13,8 @@ class CertificateController {
     }
     static async getCertificateById(req, res, next) {
         try {
-            const id = req.params;
-            const certiResDto = await certificateService.getCertificateById(id);
+            const { certificateId } = req.params;
+            const certiResDto = await certificateService.getCertificateById(certificateId);
             res.status(200).json(certiResDto);
         } catch (error) {
             next(error); 
@@ -33,8 +33,8 @@ class CertificateController {
 
     static async deleteCertificate(req, res, next) {
         try {
-            const id = req.params;
-            await certificateService.deleteCertificate(id);
+            const { certificateId } = req.params;
+            await certificateService.deleteCertificate(certificateId);
 
             res.status(200).json({ message: 'Certificate deleted successfully' });
         } catch (error) {

@@ -1,26 +1,7 @@
-class AuthenticationException extends Error {
-    constructor(message) {
+class Exception extends Error {
+    constructor(name,message) {
         super(message);
-        this.name = 'AuthenticationException'; 
+        this.name = name; 
     }
 }
-
-class ValueAlreadyExistsException extends Error {
-    constructor(message) {
-        super(message);
-        this.name = 'ValueAlreadyExistsException';
-    }
-}
-
-class ValueNotFoundException extends Error {
-    constructor(message) {
-        super(message);
-        this.name = 'ValueNotFoundException'; 
-    }
-}
-
-module.exports = {
-    AuthenticationException,
-    ValueNotFoundException,
-    ValueAlreadyExistsException,
-};
+module.exports = Exception;
