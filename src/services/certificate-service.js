@@ -1,7 +1,7 @@
 const db = require('../db/knex');
-const Exception = require('@exceptions/exceptions')
 const CertiResDto = require('@dtos/certificate-dto/certificate-res-dto')
-const Certificate = require('@models/certificate')
+const Certificate = require('@models/certificate');
+const Exception = require('../exceptions/exceptions');
 
 class CertificateService {
     static async getAllCertificates() {
@@ -21,7 +21,7 @@ class CertificateService {
     async createCertificate(certificateDto) {
         const newCertificate = new Certificate(certificateDto);
         const createdCertificate = await db('certificates').insert(newCertificate).returning('*'); 
-        return newCertificate;
+        return new CertiResDto(createdCertificate);
     }
     
     async deleteCertificate(id) {
