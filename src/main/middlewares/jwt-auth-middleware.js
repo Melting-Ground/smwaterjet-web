@@ -3,7 +3,7 @@ const tokenVerifier = require('@jwt/jwt-token-provider');
 
 const authenticate = async (req, res, next) => {
     try {
-        const authHeader = new AuthorizationHeader(req.body.headers['authorization']);
+        const authHeader = new AuthorizationHeader(req.body.headers['Authorization']);
         const token = authHeader.getToken(); 
     
         await tokenVerifier.verifyToken(token); 

@@ -22,7 +22,8 @@ class CertificateController {
     }
     static async createCertificate(req, res, next) {
         try {
-            const certificateDto = new CertificateDto(req.body);
+            const filePath = req.file.path;
+            const certificateDto = new CertificateDto(filePath);
             const certiResDto = await certificateService.createCertificate(certificateDto);
     
             res.status(201).json(certiResDto);
