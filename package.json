@@ -29,6 +29,7 @@
     "@configs": "src/configs",
     "@jwt": "src/jwt",
     "@middlewares": "src/middlewares",
-    "@exceptions": "src/exceptions"
+    "@exceptions": "src/exceptions",
+    "@uploads": "uploads"
   }
 }
