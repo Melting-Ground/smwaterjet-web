@@ -19,7 +19,7 @@ class CertificateService {
     }
 
     async createCertificate(certificateDto) {
-        const newCertificate = new Certificate(certificateDto);
+        const newCertificate = new Certificate(certificateDto.pat);
         const createdCertificate = await db('certificates').insert(newCertificate).returning('*'); 
         return new CertiResDto(createdCertificate);
     }
