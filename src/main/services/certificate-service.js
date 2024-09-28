@@ -18,13 +18,13 @@ class CertificateService {
         return new CertiResDto(certificate);
     }
 
-    async createCertificate(certificateDto) {
-        const newCertificate = new Certificate(certificateDto);
-        const createdCertificate = await db('certificates').insert(newCertificate).returning('*'); 
-        return new CertiResDto(createdCertificate);
+    static async createCertificate(certificateDto) {
+        const newCertificate = new Certificate(certificateDto.path);
+        await db('certificates').insert(newCertificate);
+        return new CertiResDto(newCertificate);
     }
     
-    async deleteCertificate(id) {
+    static async deleteCertificate(id) {
         const isDeleted = await db('certificates').where({ id }).del();
         if(isDeleted == 0){
             throw new Exception('ValueNotFoundException','Certificate not found');

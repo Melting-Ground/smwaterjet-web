@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/index.js",
+    "start": "node ./src/main/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -21,14 +21,15 @@
   },
   "_moduleAliases": {
     "@src": "src",
-    "@controllers": "src/controllers",
-    "@models": "src/models",
-    "@services": "src/services",
-    "@dtos": "src/dtos",
-    "@routes": "src/routes",
-    "@configs": "src/configs",
-    "@jwt": "src/jwt",
-    "@middlewares": "src/middlewares",
-    "@exceptions": "src/exceptions"
+    "@controllers": "src/main/controllers",
+    "@models": "src/main/models",
+    "@services": "src/main/services",
+    "@dtos": "src/main/dtos",
+    "@routes": "src/main/routes",
+    "@configs": "src/main/configs",
+    "@jwt": "src/main/jwt",
+    "@middlewares": "src/main/middlewares",
+    "@exceptions": "src/main/exceptions",
+    "@uploads": "uploads"
   }
 }
