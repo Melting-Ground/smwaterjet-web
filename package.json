@@ -30,6 +30,7 @@
     "@jwt": "src/main/jwt",
     "@middlewares": "src/main/middlewares",
     "@exceptions": "src/main/exceptions",
-    "@uploads": "uploads"
+    "@uploads": "uploads",
+    "@utils": "src/main/utils"
   }
 }
