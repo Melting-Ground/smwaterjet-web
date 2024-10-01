@@ -1,4 +1,4 @@
-class CertificateDto {
+class CertificatReseDto {
     constructor(certificate) {
         this.id = certificate.id;
         this.path = certificate.certificate_path;
@@ -6,4 +6,4 @@ class CertificateDto {
     }
   }
   
-  module.exports = CertificateDto;
+  module.exports = CertificatReseDto;
