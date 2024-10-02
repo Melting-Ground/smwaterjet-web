@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const Exception = require('@exceptions/exceptions');
 
 class FileDeleteUtil {
     static async deleteFile(filePath) {
