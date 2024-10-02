@@ -1,7 +1,8 @@
 const db = require('@configs/knex');
-const Photo = require("@modles/photo");
-const PhotoResDto = require("@dtos/pthoto-dto/photo-res-dto");
+const Photo = require("@models/photo");
+const PhotoResDto = require("@dtos/photo-dto/photo-res-dto");
 const fileDeleteUtil = require('@utils/file-delete-util');
+const Exception = require('@exceptions/exceptions');
 
 class PhotoService {
     static async getAllPhotos() {
@@ -27,7 +28,7 @@ class PhotoService {
     static async createPhoto(photoDto) {
         const newPhoto = new Photo(photoDto);
         await db('photos').insert(newPhoto);
-        return new CertiResDto(newPhoto);
+        return new PhotoResDto(newPhoto);
     }
 
     static async deletePhoto(id) {

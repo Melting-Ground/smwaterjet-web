@@ -1,5 +1,5 @@
-const PhotoDto = require("dtos/photo-dto/photo-dto");
-const photoService = require("services/photo-service");
+const PhotoDto = require("@dtos/photo-dto/photo-dto");
+const photoService = require("@services/photo-service");
 
 class PhotoController {
     static async getAllPhotos(req, res, next) {
@@ -33,8 +33,15 @@ class PhotoController {
     static async createPhoto(req, res, next) {
         try {
             const filePath = req.file.path;
-    
-            res.status(201).json();
+            
+            const photoDto = new PhotoDto({
+                title: req.body.title,
+                content: req.body.content,
+                year: req.body.year,
+                path: filePath
+            });
+            const photoResDto = await photoService.createPhoto(photoDto);
+            res.status(201).json(photoResDto);
         } catch (error) {
             next(error); 
         }
