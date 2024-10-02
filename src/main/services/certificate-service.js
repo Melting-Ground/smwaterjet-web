@@ -1,7 +1,7 @@
-const db = require('../db/knex');
+const db = require('@configs/knex');
 const CertiResDto = require('@dtos/certificate-dto/certificate-res-dto')
 const Certificate = require('@models/certificate');
-const Exception = require('../exceptions/exceptions');
+const Exception = require('@exceptions/exceptions');
 const fileDeleteUtil = require('@utils/file-delete-util');
 
 class CertificateService {

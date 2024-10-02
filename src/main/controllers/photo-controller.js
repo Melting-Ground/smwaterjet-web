@@ -23,7 +23,7 @@ class PhotoController {
     static async getPhotosByYear(req, res, next) {
         try {
             const { year } = req.params;
-            const photoResDtos = await photoService.getPhotosByYear(photoId);
+            const photoResDtos = await photoService.getPhotosByYear(year);
             res.status(200).json(photoResDtos);
         } catch (error) {
             next(error); 
