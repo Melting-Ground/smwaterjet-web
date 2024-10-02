@@ -32,5 +32,8 @@
     "@exceptions": "src/main/exceptions",
     "@uploads": "uploads",
     "@utils": "src/main/utils"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
