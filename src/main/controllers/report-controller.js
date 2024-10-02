@@ -1,5 +1,6 @@
 const ReportDto = require('@dtos/report-dto/report-dto');
 const reportService = require('@services/report-service');
+const fileDeleteUtil = require('@utils/file-delete-util');
 
 
 class ReportController {
@@ -49,6 +50,24 @@ class ReportController {
 
             res.status(200).json({ message: 'Report deleted successfully' });
         } catch (error) {
+            next(error); 
+        }
+    }
+    static async uploadFile (req, res, next) {
+        try {
+            const filePath = req.file.path;
+            res.status(200).json({ message: filePath});
+        } catch {
+            next(error); 
+        }
+    }
+
+    static async deleteFile (req, res, next) {
+        try {
+            const filePath = req.body.path;
+            await fileDeleteUtil.deleteFile(filePath)
+            res.status(200).json({ message: 'File deleted successfully' });
+        } catch {
             next(error); 
         }
     }
