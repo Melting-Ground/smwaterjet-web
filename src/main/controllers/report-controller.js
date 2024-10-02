@@ -6,7 +6,10 @@ const fileDeleteUtil = require('@utils/file-delete-util');
 class ReportController {
     static async getAllReports (req, res, next) {
         try {
-            const reportResDtos = await reportService.getAllReports();
+            const page = parseInt(req.query.page) || 1; 
+            const limit = parseInt(req.query.limit) || 20;
+            const reportResDtos = await reportService.getAllReports(page,limit);
+            
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error); 
@@ -56,7 +59,7 @@ class ReportController {
     static async uploadFile (req, res, next) {
         try {
             const filePath = req.file.path;
-            res.status(200).json({ message: filePath});
+            res.status(201).json({ message: filePath});
         } catch {
             next(error); 
         }

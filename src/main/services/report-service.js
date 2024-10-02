@@ -5,8 +5,9 @@ const Exception = require('@exceptions/exceptions');
 const folderDeleteUtil = require('@utils/folder-delete-util');
 
 class ReportService {
-    static async getAllReports() {
-        const reports = await db('reports'); 
+    static async getAllReports(page,limit) {
+        const offset = (page - 1) * limit;
+        const reports = await db('reports').limit(limit).offset(offset); 
         const reportResDtos = reports.map(cert => new ReportResDto(cert));
         return reportResDtos;
     }
