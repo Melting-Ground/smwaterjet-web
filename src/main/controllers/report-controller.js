@@ -1,6 +1,5 @@
 const ReportDto = require('@dtos/report-dto/report-dto');
 const reportService = require('@services/report-service');
-const ReportContentDto = require('@dtos/report-dto/report-content-dto');
 
 
 class ReportController {
@@ -22,11 +21,20 @@ class ReportController {
         }
     }
 
+    static async getReportByYear(req, res, next) {
+        try {
+            const { year } = req.params;
+            const reportResDtos = await reportService.getReportByYear(year);
+            res.status(200).json(reportResDtos);
+        } catch (error) {
+            next(error); 
+        }
+    }
+
     static async createReport(req, res, next) {
         try {
             const reportDto = new ReportDto(req.body);
-            const reportContentDto = ReportContentDto(req.body.content);
-            const reportResDto = await reportService.createReport(reportDto,reportContentDto);
+            const reportResDto = await reportService.createReport(reportDto);
      
             res.status(201).json(reportResDto);
         } catch (error) {
@@ -42,15 +50,6 @@ class ReportController {
             res.status(200).json({ message: 'Report deleted successfully' });
         } catch (error) {
             next(error); 
-        }
-    }
-
-    static async uploadFile(req, res, next) {
-        try {
-            const filePath = req.file.path; 
-            res.status(201).json(filePath);
-        } catch (error) {
-            next(error);
         }
     }
 }
