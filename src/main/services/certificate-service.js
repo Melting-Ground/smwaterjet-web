@@ -2,7 +2,7 @@ const db = require('../db/knex');
 const CertiResDto = require('@dtos/certificate-dto/certificate-res-dto')
 const Certificate = require('@models/certificate');
 const Exception = require('../exceptions/exceptions');
-const FileDeleteUtil = require('@utils/file-delete-util');
+const fileDeleteUtil = require('@utils/file-delete-util');
 
 class CertificateService {
     static async getAllCertificates() {
@@ -30,8 +30,8 @@ class CertificateService {
         if (!certificate) {
             throw new Exception('ValueNotFoundException', 'Certificate not found');
         }
-        const filePath = certificate.certificate_path;
-        await FileDeleteUtil.deleteFile(filePath);
+        const filePath = certificate.path;
+        await fileDeleteUtil.deleteFile(filePath);
 
         const isDeleted = await db('certificates').where({ id }).del();
         if(isDeleted == 0){

@@ -1,6 +1,6 @@
 class Certificate {
-    constructor(certificate_path) {
-      this.certificate_path = certificate_path;
+    constructor(path) {
+      this.path = path;
     }
 }
 
