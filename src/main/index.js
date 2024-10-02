@@ -6,7 +6,9 @@ const exceptionHandler = require('@middlewares/exception-handler');
 const express = require('express');
 const adminRoutes = require('@routes/admin-routes'); 
 const certificateRoutes = require('@routes/certificate-routes');
-const performanceRoutes = require('@routes/performance-routes');
+const photoRoutes = require('@routes/photo-routes');
+const reportRoutes = require('@routes/report-routes');
+
 
 const app = express();
 
@@ -16,7 +18,8 @@ app.use(express.json());
 
 app.use('/admins', adminRoutes); 
 app.use('/company', certificateRoutes);
-app.use('/performance',performanceRoutes);
+app.use('/performance/photos',photoRoutes);
+app.use('/performance/reports',reportRoutes);
 
 app.use(exceptionHandler);
 
