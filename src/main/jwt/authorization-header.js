@@ -1,9 +1,9 @@
 const Exception = require("../exceptions/exceptions");
 
-class AuthorizationHeader{
+class AuthorizationHeader {
     constructor(authHeader) {
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            throw new Exception('AuthenticationException','Invalid authorization header');
+            throw new Exception('AuthenticationException', 'Invalid authorization header');
         }
         this.authHeader = authHeader;
     }

@@ -5,27 +5,27 @@ const Exception = require('@exceptions/exceptions');
 const folderDeleteUtil = require('@utils/folder-delete-util');
 
 class ReportService {
-    static async getAllReports(page,limit) {
+    static async getAllReports(page, limit) {
         const offset = (page - 1) * limit;
-        const reports = await db('reports').limit(limit).offset(offset); 
+        const reports = await db('reports').limit(limit).offset(offset);
         const reportResDtos = reports.map(cert => new ReportResDto(cert));
         return reportResDtos;
     }
 
     static async getReportById(id) {
-        const report = await db('reports').where({ id }).first(); 
+        const report = await db('reports').where({ id }).first();
         if (report == null) {
-            throw new Exception('ValueNotFoundException','Report not found');
+            throw new Exception('ValueNotFoundException', 'Report not found');
         }
         return new ReportResDto(report);
     }
 
     static async getReportByYear(year) {
-        const reports = await db('photos').where({ year: year}); 
+        const reports = await db('photos').where({ year: year });
         const reportResDtos = reports.map(cert => new ReportResDto(cert));
         return reportResDtos;
     }
-    
+
     static async createReport(reportDto) {
         const newReport = new Report(reportDto);
         await db('photos').insert(newReport);
@@ -41,8 +41,8 @@ class ReportService {
         await folderDeleteUtil.deleteDirectory(fordlerPath);
 
         const isDeleted = await db('reports').where({ id }).del();
-        if(isDeleted == 0){
-            throw new Exception('ValueNotFoundException','Report not found');
+        if (isDeleted == 0) {
+            throw new Exception('ValueNotFoundException', 'Report not found');
         }
     }
 }

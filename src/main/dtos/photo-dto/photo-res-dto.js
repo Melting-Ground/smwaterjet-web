@@ -1,4 +1,4 @@
-class PhotoDto{
+class PhotoDto {
     constructor(photo) {
         this.id = photo.id;
         this.title = photo.title;

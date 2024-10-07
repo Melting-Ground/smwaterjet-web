@@ -12,15 +12,15 @@ class FolderDeleteUtil {
     }
     static async deleteDirectory(dirPath) {
         try {
-            let stack = [dirPath]; 
+            let stack = [dirPath];
 
             while (stack.length > 0) {
                 const currentPath = stack.pop();
-                const files = await fs.readdir(currentPath); 
+                const files = await fs.readdir(currentPath);
 
                 for (const file of files) {
                     const filePath = path.join(currentPath, file);
-                    const stats = await fs.stat(filePath); 
+                    const stats = await fs.stat(filePath);
 
                     if (stats.isDirectory()) {
                         stack.push(filePath);

@@ -4,6 +4,6 @@ class CertificatReseDto {
         this.path = certificate.path;
         this.uploaded_at = certificate.uploaded_at;
     }
-  }
-  
-  module.exports = CertificatReseDto;
+}
+
+module.exports = CertificatReseDto;

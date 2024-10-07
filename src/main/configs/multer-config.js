@@ -1,6 +1,6 @@
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs').promises; 
+const fs = require('fs').promises;
 
 const createMulter = (category, useTimestamp = false) => {
   const storage = multer.diskStorage({
@@ -8,12 +8,12 @@ const createMulter = (category, useTimestamp = false) => {
       const uploadPath = useTimestamp
         ? `uploads/${category}/${category}-${Date.now()}`
         : `uploads/${category}/`;
-        
+
       fs.mkdir(uploadPath, { recursive: true }, (err) => {
         if (err) {
-          return cb(err); 
+          return cb(err);
         }
-        cb(null, uploadPath); 
+        cb(null, uploadPath);
       });
     },
 
@@ -22,7 +22,7 @@ const createMulter = (category, useTimestamp = false) => {
       cb(null, uniqueSuffix + path.extname(file.originalname));
     }
   });
-  return multer({ storage: storage }); 
+  return multer({ storage: storage });
 };
 
 module.exports = createMulter;

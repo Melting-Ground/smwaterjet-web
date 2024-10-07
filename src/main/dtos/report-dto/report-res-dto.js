@@ -6,6 +6,6 @@ class ReportResonseDto {
         this.year = report.yeaer;
         this.uploaded_at = report.uploaded_at;
     }
-  }
-  
-  module.exports = ReportResonseDto;
+}
+
+module.exports = ReportResonseDto;

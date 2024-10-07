@@ -7,7 +7,7 @@ exports.up = function(knex) {
         table.increments('id').primary(); 
         table.string('title').notNullable(); 
         table.text('content');
-        table.integer('year');
+        table.integer('year').notNullable(); 
         table.string('path').notNullable(); 
         table.timestamp('uploaded_at').defaultTo(knex.fn.now());
     });

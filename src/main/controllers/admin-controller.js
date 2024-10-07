@@ -3,7 +3,6 @@ const adminService = require('@services/admin-service');
 
 const loginAdmin = async (req, res, next) => {
   const adminDto = new AdminDTO(req.body);
-  
   try {
     const token = await adminService.loginAdmin(adminDto);
     res.status(200).json(token);
@@ -12,4 +11,4 @@ const loginAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = {loginAdmin};
+module.exports = { loginAdmin };

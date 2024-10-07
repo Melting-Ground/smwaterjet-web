@@ -6,25 +6,25 @@ const Exception = require('@exceptions/exceptions');
 
 class PhotoService {
     static async getAllPhotos() {
-        const photos = await db('photos'); 
+        const photos = await db('photos');
         const photoResDtos = photos.map(cert => new PhotoResDto(cert));
         return photoResDtos;
     }
 
     static async getPhotoById(id) {
-        const photo = await db('photos').where({ id }).first(); 
+        const photo = await db('photos').where({ id }).first();
         if (photo == null) {
-            throw new Exception('ValueNotFoundException','Photo not found');
+            throw new Exception('ValueNotFoundException', 'Photo not found');
         }
         return new PhotoResDto(photo);
     }
 
     static async getPhotosByYear(year) {
-        const photos = await db('photos').where({ year: year}); 
+        const photos = await db('photos').where({ year: year });
         const photoResDtos = photos.map(cert => new PhotoResDto(cert));
         return photoResDtos;
     }
-    
+
     static async createPhoto(photoDto) {
         const newPhoto = new Photo(photoDto);
         await db('photos').insert(newPhoto);
@@ -40,8 +40,8 @@ class PhotoService {
         await fileDeleteUtil.deleteFile(filePath);
 
         const isDeleted = await db('photos').where({ id }).del();
-        if(isDeleted == 0){
-            throw new Exception('ValueNotFoundException','Photo not found');
+        if (isDeleted == 0) {
+            throw new Exception('ValueNotFoundException', 'Photo not found');
         }
     }
 }

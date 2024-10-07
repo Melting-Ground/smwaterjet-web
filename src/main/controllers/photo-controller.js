@@ -7,7 +7,7 @@ class PhotoController {
             const photoResDtos = await photoService.getAllPhotos();
             res.status(200).json(photoResDtos);
         } catch (error) {
-            next(error); 
+            next(error);
         }
     }
     static async getPhotoById(req, res, next) {
@@ -16,7 +16,7 @@ class PhotoController {
             const photoResDto = await photoService.getPhotoById(photoId);
             res.status(200).json(photoResDto);
         } catch (error) {
-            next(error); 
+            next(error);
         }
     }
 
@@ -26,7 +26,7 @@ class PhotoController {
             const photoResDtos = await photoService.getPhotosByYear(year);
             res.status(200).json(photoResDtos);
         } catch (error) {
-            next(error); 
+            next(error);
         }
     }
 
@@ -39,22 +39,22 @@ class PhotoController {
                 year: req.body.year,
                 path: filePath
             });
-            
+
             const photoResDto = await photoService.createPhoto(photoDto);
             res.status(201).json(photoResDto);
         } catch (error) {
-            next(error); 
+            next(error);
         }
     }
 
-    static async deletePhoto (req, res, next) {
+    static async deletePhoto(req, res, next) {
         try {
             const { photoId } = req.params;
             await photoService.deletePhoto(photoId);
 
             res.status(200).json({ message: 'Photo deleted successfully' });
         } catch (error) {
-            next(error); 
+            next(error);
         }
     }
 }
