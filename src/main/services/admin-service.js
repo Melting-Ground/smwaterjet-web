@@ -1,6 +1,6 @@
-const db = require('../db/knex'); 
-const Exception = require('../exceptions/exceptions');
-const jwtTokenProvider = require('../jwt/jwt-token-provider');
+const db = require('@configs/knex'); 
+const Exception = require('@exceptions/exceptions');
+const jwtTokenProvider = require('@jwt/jwt-token-provider');
 const argon2 = require('argon2');
 
 const loginAdmin = async (adminDto) => {

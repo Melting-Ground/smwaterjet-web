@@ -5,7 +5,7 @@
 exports.up = function(knex) {
     return knex.schema.createTable('certificates', function(table) {
         table.increments('id').primary(); 
-        table.string('certificate_path').notNullable(); 
+        table.string('path').notNullable(); 
         table.timestamp('uploaded_at').defaultTo(knex.fn.now()); 
     });
 };
