@@ -37,8 +37,8 @@ class ReportService {
         if (report == null) {
             throw new Exception('ValueNotFoundException', 'Report not found');
         }
-        const fordlerPath = report.path;
-        await folderDeleteUtil.deleteDirectory(fordlerPath);
+        const folderPath = report.path;  
+        await folderDeleteUtil.deleteDirectory(folderPath);
 
         const isDeleted = await db('reports').where({ id }).del();
         if (isDeleted == 0) {
