@@ -9,6 +9,9 @@ jest.mock('@configs/knex');
 jest.mock('@utils/folder-delete-util');
 
 describe('ReportService', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
     describe('getAllReports', () => {
         it('return list of ReportResDto', async () => {
             const mockReports = [
@@ -34,10 +37,6 @@ describe('ReportService', () => {
     describe('getReportById', () => {
         const reportId = 1;
         const mockReport = { id: reportId, title: 'Report1', content: 'Content1', year: 2024, path: 'path1' };
-
-        afterEach(() => {
-            jest.clearAllMocks();
-        });
 
         it('return a ReportResDto when report is found', async () => {
             db.mockImplementation(() => ({
