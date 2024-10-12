@@ -14,12 +14,11 @@ class ReportService {
 
     static async getReportById(id) {
         const report = await db('reports').where({ id }).first();
-        const reportfiles = await db('report_files').where({ report_id: id });
-
         if (report == null) {
             throw new Exception('ValueNotFoundException', 'Report not found');
         }
-        return new ReportResDto(report,reportfiles);
+        const reportFiles = await db('report_files').where({ report_id: id });
+        return new ReportResDto(report, reportFiles);
     }
 
     static async getReportByYear(year) {
@@ -30,13 +29,14 @@ class ReportService {
 
     static async createReport(reportDto, reportFileDto) {
         const newReport = new Report(reportDto);
-        const [insertedId] = await db('reports').insert(newReport).returning('id');
+        const result = await db('reports').insert(newReport);
+        const insertedId = result[0];
 
-        if (!reportFileDto.isEmpty()) {
+        if (reportFileDto.isNotEmpty()) {
             const fileInsertPromises = reportFileDto.paths.map(async (path) => {
                 return await db('report_files').insert({
                     report_id: insertedId,
-                    path: path, 
+                    path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
@@ -49,7 +49,7 @@ class ReportService {
         if (report == null) {
             throw new Exception('ValueNotFoundException', 'Report not found');
         }
-        const filePaths = await db('report_files').where({ report_id: id }).select('path');
+        const filePaths = await db('report_files').where({ report_id: id }).select('file_path');
 
         for (const file of filePaths) {
             try {
