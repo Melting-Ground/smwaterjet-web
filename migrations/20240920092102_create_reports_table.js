@@ -8,7 +8,6 @@ exports.up = function(knex) {
         table.string('title').notNullable();
         table.text('content').notNullable();
         table.integer('year').notNullable(); 
-        table.string('path').notNullable(); 
         table.timestamp('uploaded_at').defaultTo(knex.fn.now());
     });
 };

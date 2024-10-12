@@ -2,7 +2,7 @@ const db = require('@configs/knex');
 const Report = require("@models/report");
 const ReportResDto = require("@dtos/report-dto/report-res-dto");
 const Exception = require('@exceptions/exceptions');
-const folderDeleteUtil = require('@utils/folder-delete-util');
+const fileDeleteUtil = require('@utils/file-delete-util');
 
 class ReportService {
     static async getAllReports(page, limit) {
@@ -14,21 +14,33 @@ class ReportService {
 
     static async getReportById(id) {
         const report = await db('reports').where({ id }).first();
+        const reportfiles = await db('report_files').where({ report_id: id });
+
         if (report == null) {
             throw new Exception('ValueNotFoundException', 'Report not found');
         }
-        return new ReportResDto(report);
+        return new ReportResDto(report,reportfiles);
     }
 
     static async getReportByYear(year) {
-        const reports = await db('photos').where({ year: year });
+        const reports = await db('reports').where({ year: year });
         const reportResDtos = reports.map(cert => new ReportResDto(cert));
         return reportResDtos;
     }
 
-    static async createReport(reportDto) {
+    static async createReport(reportDto, reportFileDto) {
         const newReport = new Report(reportDto);
-        await db('photos').insert(newReport);
+        const [insertedId] = await db('reports').insert(newReport).returning('id');
+
+        if (!reportFileDto.isEmpty()) {
+            const fileInsertPromises = reportFileDto.paths.map(async (path) => {
+                return await db('report_files').insert({
+                    report_id: insertedId,
+                    path: path, 
+                });
+            });
+            await Promise.all(fileInsertPromises);
+        }
         return new ReportResDto(newReport);
     }
 
@@ -37,13 +49,17 @@ class ReportService {
         if (report == null) {
             throw new Exception('ValueNotFoundException', 'Report not found');
         }
-        const folderPath = report.path;  
-        await folderDeleteUtil.deleteDirectory(folderPath);
+        const filePaths = await db('report_files').where({ report_id: id }).select('path');
 
-        const isDeleted = await db('reports').where({ id }).del();
-        if (isDeleted == 0) {
-            throw new Exception('ValueNotFoundException', 'Report not found');
+        for (const file of filePaths) {
+            try {
+                await fileDeleteUtil.deleteFile(file.path);
+            } catch (error) {
+                console.error(`Failed to delete file at ${file.path}:`, error);
+            }
         }
+        await db('report_files').where({ report_id: id }).del();
+        await db('reports').where({ id }).del();
     }
 }
 
