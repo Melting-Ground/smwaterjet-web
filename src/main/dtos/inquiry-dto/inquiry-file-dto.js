@@ -1,7 +1,6 @@
 class InquiryFileDto {
-    constructor({inquiryId, path}){
-        this.inquiryId = inquiryId;
-        this.path = path;
+    constructor(paths){
+        this.paths = paths;
     }
 }
 

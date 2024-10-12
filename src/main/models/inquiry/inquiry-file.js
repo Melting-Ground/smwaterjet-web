@@ -1,8 +1,6 @@
 class InquiryFile {
-    constructor({ id, inquiry_id, file_title, file_path }) {
-        this.id = id;
+    constructor({ inquiry_id, file_path }) {
         this.inquiry_id = inquiry_id;
-        this.file_title = file_title;
         this.file_path = file_path;
     }
 }
