@@ -35,7 +35,11 @@ class InquiryController {
     static async editInquiry(req, res, next) {
         try {
             const { inquiryId } = req.params;
-            const inquiryResDto = await inquiryService.editInquiry(inquiryId);
+            const filePaths = req.files ? req.files.map(file => file.path) : [];
+            const inquiryDto = new InquiryDto(req.body);
+            const inquiryFileDto = new InquiryFileDto(filePaths);
+
+            const inquiryResDto = await inquiryService.editInquiry(inquiryId, inquiryDto, inquiryFileDto);
 
             res.status(200).json(inquiryResDto);
         } catch {
@@ -52,4 +56,17 @@ class InquiryController {
             next(error);
         }
     }
+
+    static async deleteFile(req, res, next) {
+        try {
+            const { inquiryFileId } = req.params;
+            await inquiryService.deleteFile(inquiryFileId);
+
+            res.status(200).json({ message: 'InquiryFile deleted successfully' });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
+
+module.exports = InquiryController;

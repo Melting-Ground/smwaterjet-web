@@ -1,5 +1,5 @@
 const db = require('@configs/knex');
-const Report = require("@models/report");
+const Report = require("@models/report/report");
 const ReportResDto = require("@dtos/report-dto/report-res-dto");
 const Exception = require('@exceptions/exceptions');
 const fileDeleteUtil = require('@utils/file-delete-util');

@@ -8,6 +8,7 @@ const adminRoutes = require('@routes/admin-routes');
 const certificateRoutes = require('@routes/certificate-routes');
 const photoRoutes = require('@routes/photo-routes');
 const reportRoutes = require('@routes/report-routes');
+const inquiryRoutes = require('@routes/inquiry-routes');
 
 
 const app = express();
@@ -20,6 +21,7 @@ app.use('/admins', adminRoutes);
 app.use('/company', certificateRoutes);
 app.use('/performance/photos', photoRoutes);
 app.use('/performance/reports', reportRoutes);
+app.use('/support/inquiries', inquiryRoutes);
 
 app.use(exceptionHandler);
 

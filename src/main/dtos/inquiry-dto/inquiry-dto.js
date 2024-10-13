@@ -9,4 +9,4 @@ class InquiryDto {
     }
 }
 
-module.exports = InquiryDto;s
+module.exports = InquiryDto;

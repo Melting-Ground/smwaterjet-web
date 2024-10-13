@@ -15,7 +15,7 @@ class InquiryService {
     static async getInquiryById(id) {
         const inquiry = await db('inquiries').where({ id }).first();
         if (inquiry == null) {
-            throw new Exception('ValueNotFoundException', 'Inquiry not found');
+            throw new Exception('ValueNotFoundException', 'Inquiry is not found');
         }
 
         const inquiryFiles = await db('inquiry_files').where({ inquiry_id: id });
@@ -25,7 +25,7 @@ class InquiryService {
         const newInquiry = new Inquiry(inquiryDto);
         const result = await db('inquiries').insert(newInquiry);
         const insertedId = result[0];
-        
+
         if (inquiryFileDto.isNotEmpty()) {
             const fileInsertPromises = inquiryFileDto.paths.map(async (path) => {
                 return await db('inquiry_files').insert({
@@ -37,22 +37,30 @@ class InquiryService {
         }
         return new InquiryResDto(newInquiry);
     }
-    static async editInquiry(id, inquiryDto) {
+    static async editInquiry(id, inquiryDto, inquiryFileDto) {
         const inquiry = await db('inquiries').where({ id }).first();
         const updateInquiry = new Inquiry(inquiryDto);
-
         if (!inquiry) {
             throw new Exception('ValueNotFoundException', 'Inquiry is not found');
         }
         await db('inquiries').where({ id }).update(updateInquiry);
 
+        if (inquiryFileDto.isNotEmpty()) {
+            const fileInsertPromises = inquiryFileDto.paths.map(async (path) => {
+                return await db('inquiry_files').insert({
+                    inquiry_id: insertedId,
+                    path: path,
+                });
+            });
+            await Promise.all(fileInsertPromises);
+        }
         return new InquiryResDto(updateInquiry);
     }
 
     static async deleteInquiry(id) {
         const inquiry = await db('inquiries').where({ id }).first();
         if (inquiry == null) {
-            throw new Exception('ValueNotFoundException', 'Inquiry not found');
+            throw new Exception('ValueNotFoundException', 'Inquiry is not found');
         }
         const filePaths = await db('inquiry_files').where({ inquiry_id: id }).select('file_path');
 
@@ -68,6 +76,21 @@ class InquiryService {
     }
 
     static async deleteFile(id) {
-        await db('inquiry_files').where({ id }).del();
+        try {
+            const file = await db('inquiry_files').where({ id }).select('file_path').first();
+            if (!file) {
+                throw new Exception('ValueNotFoundException', 'InquiryFile is not found');
+            }
+            const filePath = file.file_path; 
+
+            await db('inquiry_files').where({ id }).del();
+
+            await fileDeleteUtil.deleteFile(filePath);
+
+        } catch (error) {
+            console.error(`Failed to delete file:`, error); 
+        }
     }
 }
+
+module.exports = InquiryService;
