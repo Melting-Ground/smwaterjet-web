@@ -1,5 +1,5 @@
 const express = require('express');
-const certificateController = require('@controllers/certificate-controller');
+const CertificateController = require('@controllers/certificate-controller');
 const authenticate = require('@middlewares/jwt-authentication');
 const creatMulter = require("@configs/multer-config");
 
@@ -7,12 +7,12 @@ const upload = creatMulter('certificates');
 
 const router = express.Router();
 
-router.get('/certificates', certificateController.getAllCertificates);
+router.get('/certificates', CertificateController.getAllCertificates);
 
-router.get('/certificates/:certificateId', certificateController.getCertificateById);
+router.get('/certificates/:certificateId', CertificateController.getCertificateById);
 
-router.post('/certificates', authenticate, upload.single('file'), certificateController.createCertificate);
+router.post('/certificates', authenticate, upload.single('file'), CertificateController.createCertificate);
 
-router.delete('/certificates/:certificateId', authenticate, certificateController.deleteCertificate);
+router.delete('/certificates/:certificateId', authenticate, CertificateController.deleteCertificate);
 
 module.exports = router;

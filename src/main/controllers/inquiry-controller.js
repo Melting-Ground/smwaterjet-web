@@ -1,6 +1,6 @@
 const InquiryDto = require('@dtos/inquiry-dto/inquiry-dto');
 const InquiryFileDto = require('@dtos/inquiry-dto/inquiry-file-dto');
-const inquiryService = require('@services/inquiry-service');
+const InquiryService = require('@services/inquiry-service');
 
 class InquiryController {
     static async getAllInquiries(req, res, next) {
@@ -8,7 +8,7 @@ class InquiryController {
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 20;
 
-            const inquiryResDtos = await inquiryService.getAllInquiries(page, limit);
+            const inquiryResDtos = await InquiryService.getAllInquiries(page, limit);
             res.status(200).json(inquiryResDtos);
         } catch (error) {
             next(error);
@@ -17,7 +17,7 @@ class InquiryController {
     static async getInquiryById(req, res, next) {
         try {
             const { inquiryId } = req.params;
-            const inquiryResDto = await inquiryService.getInquiryById(inquiryId);
+            const inquiryResDto = await InquiryService.getInquiryById(inquiryId);
             res.status(200).json(inquiryResDto);
         } catch (error) {
             next(error);
@@ -28,7 +28,7 @@ class InquiryController {
             const filePaths = req.files ? req.files.map(file => file.path) : [];
             const inquiryDto = new InquiryDto(req.body);
             const inquiryFileDto = new InquiryFileDto(filePaths);
-            const inquiryResDto = await inquiryService.createInquiry(inquiryDto, inquiryFileDto);
+            const inquiryResDto = await InquiryService.createInquiry(inquiryDto, inquiryFileDto);
 
             res.status(201).json(inquiryResDto);
         } catch (error) {
@@ -42,7 +42,7 @@ class InquiryController {
             const inquiryDto = new InquiryDto(req.body);
             const inquiryFileDto = new InquiryFileDto(filePaths);
 
-            const inquiryResDto = await inquiryService.editInquiry(inquiryId, inquiryDto, inquiryFileDto);
+            const inquiryResDto = await InquiryService.editInquiry(inquiryId, inquiryDto, inquiryFileDto);
 
             res.status(200).json(inquiryResDto);
         } catch {
@@ -52,7 +52,7 @@ class InquiryController {
     static async deleteInquiry(req, res, next) {
         try {
             const { inquiryId } = req.params;
-            await inquiryService.deleteInquiry(inquiryId);
+            await InquiryService.deleteInquiry(inquiryId);
 
             res.status(200).json({ message: 'Inquiry deleted successfully' });
         } catch (error) {
@@ -63,7 +63,7 @@ class InquiryController {
     static async deleteFile(req, res, next) {
         try {
             const { inquiryFileId } = req.params;
-            await inquiryService.deleteFile(inquiryFileId);
+            await InquiryService.deleteFile(inquiryFileId);
 
             res.status(200).json({ message: 'InquiryFile deleted successfully' });
         } catch (error) {
