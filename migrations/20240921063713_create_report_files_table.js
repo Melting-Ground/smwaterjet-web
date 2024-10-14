@@ -5,8 +5,9 @@
 exports.up = function(knex) {
     return knex.schema.createTable('report_files', function(table) {
         table.increments('id').primary(); 
-        table.integer('report_id').unsigned().notNullable().references('id').inTable('reports');
+        table.integer('report_id').unsigned().notNullable();
         table.string('file_path').notNullable(); 
+        table.foreign('report_id').references('id').inTable('reports'); 
     });
 };
 
