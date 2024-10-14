@@ -11,4 +11,4 @@ class NoticeFileDto {
     }
 }
 
-module.exports = NoticeFileDto
+module.exports = NoticeFileDto;
