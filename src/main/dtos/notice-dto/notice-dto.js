@@ -1,8 +1,8 @@
-class Notice {
+class NoticeDto {
     constructor({title, content}) {
         this.title = title;
         this.content = content;
     }
 }
 
-module.exports = Notice;
+module.exports = NoticeDto;

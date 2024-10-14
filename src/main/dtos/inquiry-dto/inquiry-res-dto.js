@@ -1,6 +1,6 @@
 class InquiryResponseDto {
     constructor(inquiry, files = null) {
-        this.idd = inquiry.id;
+        this.id = inquiry.id;
         this.username = inquiry.username;
         this.phone_number = inquiry.phone_number;
         this.email = inquiry.email;
