@@ -1,6 +1,6 @@
 const NoticeDto = require("@dtos/notice-dto/notice-dto");
 const NoticeFileDto = require("@dtos/notice-dto/notice-file-dto");
-const noticeService = require('@sservices/notice-service');
+const noticeService = require('@services/notice-service');
 
 class NoticeController {
     static async getAllNotices(req, res, next) {
