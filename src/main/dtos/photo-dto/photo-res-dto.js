@@ -1,4 +1,4 @@
-class PhotoDto{
+class PhotoResponseDto {
     constructor(photo) {
         this.id = photo.id;
         this.title = photo.title;
@@ -9,4 +9,4 @@ class PhotoDto{
     }
 }
 
-module.exports = PhotoDto;
+module.exports = PhotoResponseDto;
