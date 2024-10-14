@@ -1,4 +1,4 @@
-const NewsDto = require("../dtos/news-dto/news-dto");
+const NewsDto = require("@dtos/news-dto/news-dto");
 const NewsService = require('@services/news-service');
 
 class NewsController {
