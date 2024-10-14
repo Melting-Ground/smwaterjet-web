@@ -23,6 +23,7 @@ class NoticeController {
             next(error);
         }
     }
+
     static async createNotice(req, res, next) {
         try {
             const filePaths = req.files ? req.files.map(file => file.path) : [];
@@ -35,6 +36,7 @@ class NoticeController {
             next(error);
         }
     }
+
     static async editNotice(req, res, next) {
         try {
             const { noticeId } = req.params;
@@ -49,6 +51,7 @@ class NoticeController {
             next(error);
         }
     }
+    
     static async deleteNotice(req, res, next) {
         try {
             const { noticeId } = req.params;
