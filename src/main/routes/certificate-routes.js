@@ -1,9 +1,9 @@
 const express = require('express');
 const certificateController = require('@controllers/certificate-controller');
-const authenticate = require('@middlewares/jwt-auth-middleware')
-const creatMulter = require("@configs/multer-config")
+const authenticate = require('@middlewares/jwt-authentication');
+const creatMulter = require("@configs/multer-config");
 
-const upload = creatMulter('certificates')
+const upload = creatMulter('certificates');
 
 const router = express.Router();
 

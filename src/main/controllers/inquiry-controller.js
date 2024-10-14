@@ -5,7 +5,10 @@ const inquiryService = require('@services/inquiry-service');
 class InquiryController {
     static async getAllInquiries(req, res, next) {
         try {
-            const inquiryResDtos = await inquiryService.getAllInquiries();
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 20;
+
+            const inquiryResDtos = await inquiryService.getAllInquiries(page, limit);
             res.status(200).json(inquiryResDtos);
         } catch (error) {
             next(error);

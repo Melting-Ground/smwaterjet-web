@@ -1,4 +1,4 @@
-const CertificateDto = require('@dtos/certificate-dto/certificate-dto')
+const CertificateDto = require('@dtos/certificate-dto/certificate-dto');
 const certificateService = require('@services/certificate-service');
 
 

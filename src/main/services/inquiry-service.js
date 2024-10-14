@@ -3,6 +3,7 @@ const Inquiry = require("@models/inquiry/inquiry");
 const InquiryResDto = require("@dtos/inquiry-dto/inquiry-res-dto");
 const Exception = require('@exceptions/exceptions');
 const fileDeleteUtil = require('@utils/file-delete-util');
+const argon2 = require('argon2');
 
 class InquiryService {
     static async getAllInquiries(page, limit) {
@@ -21,8 +22,15 @@ class InquiryService {
         const inquiryFiles = await db('inquiry_files').where({ inquiry_id: id });
         return new InquiryResDto(inquiry, inquiryFiles);
     }
+
     static async createInquiry(inquiryDto, inquiryFileDto) {
-        const newInquiry = new Inquiry(inquiryDto);
+        const hashedPassword = await argon2.hash(inquiryDto.password);
+        const newInquiry = new Inquiry({
+            ...inquiryDto,
+            password: hashedPassword
+
+        });
+        
         const result = await db('inquiries').insert(newInquiry);
         const insertedId = result[0];
 
@@ -37,6 +45,7 @@ class InquiryService {
         }
         return new InquiryResDto(newInquiry);
     }
+
     static async editInquiry(id, inquiryDto, inquiryFileDto) {
         const inquiry = await db('inquiries').where({ id }).first();
         const updateInquiry = new Inquiry(inquiryDto);

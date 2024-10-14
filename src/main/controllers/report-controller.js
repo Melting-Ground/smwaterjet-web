@@ -7,8 +7,8 @@ class ReportController {
         try {
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 20;
-            const reportResDtos = await reportService.getAllReports(page, limit);
 
+            const reportResDtos = await reportService.getAllReports(page, limit);
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);

@@ -1,6 +1,6 @@
 const express = require('express');
 const photoController = require('@controllers/photo-controller');
-const authenticate = require('@middlewares/jwt-auth-middleware');
+const authenticate = require('@middlewares/jwt-authentication');
 const creatMulter = require("@configs/multer-config");
 
 const upload = creatMulter('photos');
