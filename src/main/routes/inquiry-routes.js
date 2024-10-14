@@ -14,7 +14,7 @@ router.get('/:inquiryId', inquiryController.getInquiryById);
 
 router.post('/', upload.array('files', 10), inquiryController.createInquiry);
 
-router.put('/:inquiryId', userAuthenticate, inquiryController.editInquiry);
+router.put('/:inquiryId', userAuthenticate, upload.array('newFiles', 10), inquiryController.editInquiry);
 
 router.delete('/:inquiryId', userAuthenticate, inquiryController.deleteInquiry);
 
