@@ -1,10 +1,10 @@
 const PhotoDto = require("@dtos/photo-dto/photo-dto");
-const photoService = require("@services/photo-service");
+const PhotoService = require("@services/photo-service");
 
 class PhotoController {
     static async getAllPhotos(req, res, next) {
         try {
-            const photoResDtos = await photoService.getAllPhotos();
+            const photoResDtos = await PhotoService.getAllPhotos();
             res.status(200).json(photoResDtos);
         } catch (error) {
             next(error);
@@ -13,7 +13,7 @@ class PhotoController {
     static async getPhotoById(req, res, next) {
         try {
             const { photoId } = req.params;
-            const photoResDto = await photoService.getPhotoById(photoId);
+            const photoResDto = await PhotoService.getPhotoById(photoId);
             res.status(200).json(photoResDto);
         } catch (error) {
             next(error);
@@ -23,7 +23,7 @@ class PhotoController {
     static async getPhotosByYear(req, res, next) {
         try {
             const { year } = req.params;
-            const photoResDtos = await photoService.getPhotosByYear(year);
+            const photoResDtos = await PhotoService.getPhotosByYear(year);
             res.status(200).json(photoResDtos);
         } catch (error) {
             next(error);
@@ -40,7 +40,7 @@ class PhotoController {
                 path: filePath
             });
 
-            const photoResDto = await photoService.createPhoto(photoDto);
+            const photoResDto = await PhotoService.createPhoto(photoDto);
             res.status(201).json(photoResDto);
         } catch (error) {
             next(error);
@@ -50,7 +50,7 @@ class PhotoController {
     static async deletePhoto(req, res, next) {
         try {
             const { photoId } = req.params;
-            await photoService.deletePhoto(photoId);
+            await PhotoService.deletePhoto(photoId);
 
             res.status(200).json({ message: 'Photo deleted successfully' });
         } catch (error) {

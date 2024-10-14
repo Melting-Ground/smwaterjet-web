@@ -1,5 +1,5 @@
 const express = require('express');
-const reportController = require('@controllers/report-controller');
+const ReportController = require('@controllers/report-controller');
 const authenticate = require('@middlewares/jwt-authentication');
 const creatMulter = require("@configs/multer-config");
 
@@ -7,14 +7,14 @@ const upload = creatMulter('reports');
 
 const router = express.Router();
 
-router.get('/', reportController.getAllReports);
+router.get('/', ReportController.getAllReports);
 
-router.get('/:reportId', reportController.getReportById);
+router.get('/:reportId', ReportController.getReportById);
 
-router.get('/year/:year', reportController.getReportByYear);
+router.get('/year/:year', ReportController.getReportByYear);
 
-router.post('/', authenticate, upload.array('files', 10), reportController.createReport);
+router.post('/', authenticate, upload.array('files', 10), ReportController.createReport);
 
-router.delete('/:reportId', authenticate, reportController.deleteReport);
+router.delete('/:reportId', authenticate, ReportController.deleteReport);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const ReportDto = require('@dtos/report-dto/report-dto');
-const reportService = require('@services/report-service');
+const ReportService = require('@services/report-service');
 const ReportFileDto = require('@dtos/report-dto/report-file-dto');
 
 class ReportController {
@@ -8,7 +8,7 @@ class ReportController {
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 20;
 
-            const reportResDtos = await reportService.getAllReports(page, limit);
+            const reportResDtos = await ReportService.getAllReports(page, limit);
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);
@@ -17,7 +17,7 @@ class ReportController {
     static async getReportById(req, res, next) {
         try {
             const { reportId } = req.params;
-            const reportResDto = await reportService.getReportById(reportId);
+            const reportResDto = await ReportService.getReportById(reportId);
             res.status(200).json(reportResDto);
         } catch (error) {
             next(error);
@@ -27,7 +27,7 @@ class ReportController {
     static async getReportByYear(req, res, next) {
         try {
             const { year } = req.params;
-            const reportResDtos = await reportService.getReportByYear(year);
+            const reportResDtos = await ReportService.getReportByYear(year);
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);
@@ -39,7 +39,7 @@ class ReportController {
             const filePaths = req.files ? req.files.map(file => file.path) : [];
             const reportDto = new ReportDto(req.body);
             const reportFileDto = new ReportFileDto(filePaths);
-            const reportResDto = await reportService.createReport(reportDto, reportFileDto);
+            const reportResDto = await ReportService.createReport(reportDto, reportFileDto);
 
             res.status(201).json(reportResDto);
         } catch (error) {
@@ -50,7 +50,7 @@ class ReportController {
     static async deleteReport(req, res, next) {
         try {
             const { reportId } = req.params;
-            await reportService.deleteReport(reportId);
+            await ReportService.deleteReport(reportId);
 
             res.status(200).json({ message: 'Report deleted successfully' });
         } catch (error) {

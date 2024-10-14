@@ -1,11 +1,11 @@
 const CertificateDto = require('@dtos/certificate-dto/certificate-dto');
-const certificateService = require('@services/certificate-service');
+const CertificateService = require('@services/certificate-service');
 
 
 class CertificateController {
     static async getAllCertificates(req, res, next) {
         try {
-            const certiResDtos = await certificateService.getAllCertificates();
+            const certiResDtos = await CertificateService.getAllCertificates();
             res.status(200).json(certiResDtos);
         } catch (error) {
             next(error);
@@ -14,7 +14,7 @@ class CertificateController {
     static async getCertificateById(req, res, next) {
         try {
             const { certificateId } = req.params;
-            const certiResDto = await certificateService.getCertificateById(certificateId);
+            const certiResDto = await CertificateService.getCertificateById(certificateId);
             res.status(200).json(certiResDto);
         } catch (error) {
             next(error);
@@ -24,7 +24,7 @@ class CertificateController {
         try {
             const filePath = req.file.path;
             const certificateDto = new CertificateDto(filePath);
-            const certiResDto = await certificateService.createCertificate(certificateDto);
+            const certiResDto = await CertificateService.createCertificate(certificateDto);
 
             res.status(201).json(certiResDto);
         } catch (error) {
@@ -35,7 +35,7 @@ class CertificateController {
     static async deleteCertificate(req, res, next) {
         try {
             const { certificateId } = req.params;
-            await certificateService.deleteCertificate(certificateId);
+            await CertificateService.deleteCertificate(certificateId);
 
             res.status(200).json({ message: 'Certificate deleted successfully' });
         } catch (error) {

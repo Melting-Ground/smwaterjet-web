@@ -10,7 +10,7 @@ const photoRoutes = require('@routes/photo-routes');
 const reportRoutes = require('@routes/report-routes');
 const inquiryRoutes = require('@routes/inquiry-routes');
 const noticeRoutes = require('@routes/notice-routes');
-
+const newsRoutes = require('@routes/news-routes');
 
 const app = express();
 
@@ -24,6 +24,7 @@ app.use('/performance/photos', photoRoutes);
 app.use('/performance/reports', reportRoutes);
 app.use('/support/inquiries', inquiryRoutes);
 app.use('/support/notices', noticeRoutes);
+app.use('/support/news', newsRoutes);
 
 app.use(exceptionHandler);
 
