@@ -57,7 +57,7 @@ class InquiryService {
         if (inquiryFileDto.isNotEmpty()) {
             const fileInsertPromises = inquiryFileDto.paths.map(async (path) => {
                 return await db('inquiry_files').insert({
-                    inquiry_id: insertedId,
+                    inquiry_id: id,
                     path: path,
                 });
             });
