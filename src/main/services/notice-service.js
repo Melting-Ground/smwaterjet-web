@@ -32,12 +32,12 @@ class NoticeService {
             const fileInsertPromises = noticeFileDto.paths.map(async (path) => {
                 return await db('notice_files').insert({
                     notice_id: insertedId,
-                    path: path,
+                    file_path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
         }
-        return new NoticeResDto(newNotice);
+        return new NoticeResDto(newNotice, noticeFileDto.paths);
     }
 
     static async editNotice(id, noticeDto, noticeFileDto) {
@@ -52,12 +52,12 @@ class NoticeService {
             const fileInsertPromises = noticeFileDto.paths.map(async (path) => {
                 return await db('notice_files').insert({
                     notice_id: id,
-                    path: path,
+                    file_path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
         }
-        return new NoticeResDto(updateNotice);
+        return new NoticeResDto(updateNotice, noticeFileDto.paths);
     }
 
     static async deleteNotice(id) {
@@ -81,7 +81,7 @@ class NoticeService {
     static async deleteFile(id) {
         const file = await db('notice_files').where({ id }).select('file_path').first();
         if (file == null) {
-            throw new Exception('ValueNotFoundException', 'NoticeFiles is not found');
+            throw new Exception('ValueNotFoundException', 'NoticeFile is not found');
         }
         const filePath = file.file_path;
 

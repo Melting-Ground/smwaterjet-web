@@ -27,6 +27,26 @@ class ReportService {
         return reportResDtos;
     }
 
+    static async editReport(id, reportDto, reportFileDto) {
+        const report = await db('reports').where({ id }).first();
+        const updateReport = new Report(reportDto);
+        if (report == null) {
+            throw new Exception('ValueNotFoundException', 'Report is not found');
+        }
+        await db('reports').where({ id }).update(updateReport);
+
+        if (reportFileDto.isNotEmpty()) {
+            const fileInsertPromises = reportFileDto.paths.map(async (path) => {
+                return await db('report_files').insert({
+                    report_id: id,
+                    file_path: path,
+                });
+            });
+            await Promise.all(fileInsertPromises);
+        }
+        return new ReportResDto(updateReport, reportFileDto.paths);
+    }
+
     static async createReport(reportDto, reportFileDto) {
         const newReport = new Report(reportDto);
         const result = await db('reports').insert(newReport);
@@ -41,7 +61,7 @@ class ReportService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new ReportResDto(newReport);
+        return new ReportResDto(newReport, reportFileDto.paths);
     }
 
     static async deleteReport(id) {
@@ -60,6 +80,18 @@ class ReportService {
         }
         await db('report_files').where({ report_id: id }).del();
         await db('reports').where({ id }).del();
+    }
+
+    static async deleteFile(id) {
+        const file = await db('report_files').where({ id }).select('file_path').first();
+        if (file == null) {
+            throw new Exception('ValueNotFoundException', 'ReportFile is not found');
+        }
+        const filePath = file.file_path;
+
+        await db('report_files').where({ id }).del();
+
+        await fileDeleteUtil.deleteFile(filePath);
     }
 }
 

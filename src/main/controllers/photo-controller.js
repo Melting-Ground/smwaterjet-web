@@ -30,6 +30,19 @@ class PhotoController {
         }
     }
 
+    static async editPhoto(req, res, next) {
+        try {
+            const { photoId } = req.params;
+            const photoDto = new PhotoDto(req.body);
+
+            const photoResDto = await PhotoService.editPhoto(photoId,photoDto);
+            res.status(200).json(photoResDto);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
     static async createPhoto(req, res, next) {
         try {
             const filePath = req.file.path;

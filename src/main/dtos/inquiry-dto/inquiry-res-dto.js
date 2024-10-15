@@ -1,12 +1,12 @@
 class InquiryResponseDto {
-    constructor(inquiry, files = null) {
+    constructor(inquiry, files = []) {
         this.id = inquiry.id;
         this.username = inquiry.username;
         this.phone_number = inquiry.phone_number;
         this.email = inquiry.email;
         this.title = inquiry.title;
         this.content = inquiry.content;
-        this.files = files;
+        this.files = Array.isArray(files) ? files : [];
         this.created_at = inquiry.created_at;
     }
 }

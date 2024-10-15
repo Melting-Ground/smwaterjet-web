@@ -34,6 +34,21 @@ class ReportController {
         }
     }
 
+    static async editReport(req, res, next) {
+        try {
+            const { reportId } = req.params;
+            const filePaths = req.files ? req.files.map(file => file.path) : [];
+            const reportDto = new ReportDto(req.body);
+            const reportFileDto = new ReportFileDto(filePaths);
+
+            const reportResDto = await NoticeService.editReport(reportId, reportDto, reportFileDto);
+
+            res.status(200).json(reportResDto);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     static async createReport(req, res, next) {
         try {
             const filePaths = req.files ? req.files.map(file => file.path) : [];
@@ -53,6 +68,16 @@ class ReportController {
             await ReportService.deleteReport(reportId);
 
             res.status(200).json({ message: 'Report deleted successfully' });
+        } catch (error) {
+            next(error);
+        }
+    }
+    static async deleteFile(req, res, next) {
+        try {
+            const { reportFileId } = req.params;
+            await ReportService.deleteFile(reportFileId);
+
+            res.status(200).json({ message: 'ReportFile deleted successfully' });
         } catch (error) {
             next(error);
         }

@@ -1,10 +1,10 @@
 class ReportResponseDto {
-    constructor(report, files = null) {
+    constructor(report, files = []) {
         this.id = report.id;
         this.title = report.title;
         this.content = report.content;
         this.year = report.year;
-        this.files = files;
+        this.files = Array.isArray(files) ? files : [];
         this.uploaded_at = report.uploaded_at;
     }
 }

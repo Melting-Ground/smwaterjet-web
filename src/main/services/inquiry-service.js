@@ -38,12 +38,12 @@ class InquiryService {
             const fileInsertPromises = inquiryFileDto.paths.map(async (path) => {
                 return await db('inquiry_files').insert({
                     inquiry_id: insertedId,
-                    path: path,
+                    file_path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
         }
-        return new InquiryResDto(newInquiry);
+        return new InquiryResDto(newInquiry, inquiryFileDto.paths);
     }
 
     static async editInquiry(id, inquiryDto, inquiryFileDto) {
@@ -58,12 +58,12 @@ class InquiryService {
             const fileInsertPromises = inquiryFileDto.paths.map(async (path) => {
                 return await db('inquiry_files').insert({
                     inquiry_id: id,
-                    path: path,
+                    file_path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
         }
-        return new InquiryResDto(updateInquiry);
+        return new InquiryResDto(updateInquiry, inquiryFileDto.paths);
     }
 
     static async deleteInquiry(id) {

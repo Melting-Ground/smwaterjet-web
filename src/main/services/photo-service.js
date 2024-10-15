@@ -31,6 +31,17 @@ class PhotoService {
         return new PhotoResDto(newPhoto);
     }
 
+    static async editPhoto(id, photoDto) {
+        const photo = await db('photos').where({ id }).first();
+        const updatePhoto = new Photo(photoDto);
+
+        if (photo == null) {
+            throw new Exception('ValueNotFoundException', 'Photo is not found');
+        }
+        await db('photos').where({ id }).update(updatePhoto);
+        return new PhotoResDto(updatePhoto);
+    }
+
     static async deletePhoto(id) {
         const photo = await db('photos').where({ id }).first();
         if (photo == null) {
