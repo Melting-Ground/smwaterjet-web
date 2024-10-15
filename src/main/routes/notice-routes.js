@@ -3,7 +3,7 @@ const creatMulter = require("@configs/multer-config");
 const authenticate = require('@middlewares/jwt-authentication');
 const NoticeController = require('@controllers/notice-controller');
 
-const upload = creatMulter('notices')
+const upload = creatMulter('notices');
 
 const router = express.Router();
 

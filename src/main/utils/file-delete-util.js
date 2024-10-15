@@ -5,7 +5,7 @@ class FileDeleteUtil {
     static async deleteFile(filePath) {
         try {
             await fs.unlink(filePath);
-        } catch (err) {
+        } catch (error) {
             throw new Exception('ValueNotFoundException', 'Could not delete the file');
         }
     }

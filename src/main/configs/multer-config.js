@@ -15,8 +15,10 @@ const createMulter = (category) => {
     },
 
     filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      cb(null, uniqueSuffix + path.extname(file.originalname));
+      const uniqueSuffix = Date.now();
+      const originalName = path.basename(file.originalname, path.extname(file.originalname));
+      const ext = path.extname(file.originalname);
+      cb(null, `${uniqueSuffix}-${originalName}${ext}`);
     }
   });
   return multer({ storage: storage });

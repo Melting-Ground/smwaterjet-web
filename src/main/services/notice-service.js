@@ -79,20 +79,15 @@ class NoticeService {
     }
 
     static async deleteFile(id) {
-        try {
-            const file = await db('notice_files').where({ id }).select('file_path').first();
-            if (!file) {
-                throw new Exception('ValueNotFoundException', 'NoticeFiles is not found');
-            }
-            const filePath = file.file_path;
-
-            await db('notice_files').where({ id }).del();
-
-            await fileDeleteUtil.deleteFile(filePath);
-
-        } catch (error) {
-            console.error(`Failed to delete file:`, error);
+        const file = await db('notice_files').where({ id }).select('file_path').first();
+        if (file == null) {
+            throw new Exception('ValueNotFoundException', 'NoticeFiles is not found');
         }
+        const filePath = file.file_path;
+
+        await db('notice_files').where({ id }).del();
+
+        await fileDeleteUtil.deleteFile(filePath);
     }
 }
 

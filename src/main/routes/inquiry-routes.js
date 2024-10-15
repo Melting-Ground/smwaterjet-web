@@ -4,7 +4,7 @@ const creatMulter = require("@configs/multer-config");
 const userAuthenticate = require('@middlewares/user-authentication');
 const authenticate = require('@middlewares/jwt-authentication');
 
-const upload = creatMulter('inquiries')
+const upload = creatMulter('inquiries');
 
 const router = express.Router();
 

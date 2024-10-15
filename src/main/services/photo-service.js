@@ -14,7 +14,7 @@ class PhotoService {
     static async getPhotoById(id) {
         const photo = await db('photos').where({ id }).first();
         if (photo == null) {
-            throw new Exception('ValueNotFoundException', 'Photo not found');
+            throw new Exception('ValueNotFoundException', 'Photo is not found');
         }
         return new PhotoResDto(photo);
     }
@@ -34,15 +34,12 @@ class PhotoService {
     static async deletePhoto(id) {
         const photo = await db('photos').where({ id }).first();
         if (photo == null) {
-            throw new Exception('ValueNotFoundException', 'Photo not found');
+            throw new Exception('ValueNotFoundException', 'Photo is not found');
         }
         const filePath = photo.path;
         await fileDeleteUtil.deleteFile(filePath);
 
-        const isDeleted = await db('photos').where({ id }).del();
-        if (isDeleted == 0) {
-            throw new Exception('ValueNotFoundException', 'Photo not found');
-        }
+        await db('photos').where({ id }).del();
     }
 }
 

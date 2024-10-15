@@ -30,7 +30,7 @@ class InquiryService {
             password: hashedPassword
 
         });
-        
+
         const result = await db('inquiries').insert(newInquiry);
         const insertedId = result[0];
 
@@ -49,7 +49,7 @@ class InquiryService {
     static async editInquiry(id, inquiryDto, inquiryFileDto) {
         const inquiry = await db('inquiries').where({ id }).first();
         const updateInquiry = new Inquiry(inquiryDto);
-        if (!inquiry) {
+        if (inquiry == null) {
             throw new Exception('ValueNotFoundException', 'Inquiry is not found');
         }
         await db('inquiries').where({ id }).update(updateInquiry);
@@ -85,20 +85,15 @@ class InquiryService {
     }
 
     static async deleteFile(id) {
-        try {
-            const file = await db('inquiry_files').where({ id }).select('file_path').first();
-            if (!file) {
-                throw new Exception('ValueNotFoundException', 'InquiryFile is not found');
-            }
-            const filePath = file.file_path; 
-
-            await db('inquiry_files').where({ id }).del();
-
-            await fileDeleteUtil.deleteFile(filePath);
-
-        } catch (error) {
-            console.error(`Failed to delete file:`, error); 
+        const file = await db('inquiry_files').where({ id }).select('file_path').first();
+        if (file == null) {
+            throw new Exception('ValueNotFoundException', 'InquiryFile is not found');
         }
+        const filePath = file.file_path;
+
+        await db('inquiry_files').where({ id }).del();
+
+        await fileDeleteUtil.deleteFile(filePath);
     }
 }
 

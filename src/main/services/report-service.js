@@ -15,7 +15,7 @@ class ReportService {
     static async getReportById(id) {
         const report = await db('reports').where({ id }).first();
         if (report == null) {
-            throw new Exception('ValueNotFoundException', 'Report not found');
+            throw new Exception('ValueNotFoundException', 'Report is not found');
         }
         const reportFiles = await db('report_files').where({ report_id: id });
         return new ReportResDto(report, reportFiles);
@@ -47,7 +47,7 @@ class ReportService {
     static async deleteReport(id) {
         const report = await db('reports').where({ id }).first();
         if (report == null) {
-            throw new Exception('ValueNotFoundException', 'Report not found');
+            throw new Exception('ValueNotFoundException', 'Report is not found');
         }
         const filePaths = await db('report_files').where({ report_id: id }).select('file_path');
 

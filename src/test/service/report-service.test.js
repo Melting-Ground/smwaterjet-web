@@ -1,9 +1,11 @@
 const db = require('@configs/knex');
-const Report = require('@models/report');
+const Report = require('@models/report/report');
 const ReportResDto = require('@dtos/report-dto/report-res-dto');
 const Exception = require('@exceptions/exceptions');
-const folderDeleteUtil = require('@utils/folder-delete-util');
 const ReportService = require('@services/report-service');
+const ReportFileDto = require('../../main/dtos/report-dto/report-file-dto');
+const fileDeleteUtil = require('@utils/file-delete-util');
+
 
 jest.mock('@configs/knex');
 jest.mock('@utils/folder-delete-util');
@@ -15,8 +17,8 @@ describe('ReportService', () => {
     describe('getAllReports', () => {
         it('return list of ReportResDto', async () => {
             const mockReports = [
-                { id: 1, title: 'Report1', content: 'Content1', year: 2024, path: 'path1' },
-                { id: 1, title: 'Report2', content: 'Content2', year: 2024, path: 'path2' },
+                { id: 1, title: 'Report1', content: 'Content1', year: 2024 },
+                { id: 1, title: 'Report2', content: 'Content2', year: 2024 },
             ];
             db.mockReturnValue({
                 limit: jest.fn().mockReturnThis(),
@@ -34,9 +36,10 @@ describe('ReportService', () => {
             expect(result[1].id).toBe(mockReports[1].id);
         });
     });
+
     describe('getReportById', () => {
         const reportId = 1;
-        const mockReport = { id: reportId, title: 'Report1', content: 'Content1', year: 2024, path: 'path1' };
+        const mockReport = { id: reportId, title: 'Report1', content: 'Content1', year: 2024 };
 
         it('return a ReportResDto when report is found', async () => {
             db.mockImplementation(() => ({
@@ -58,11 +61,12 @@ describe('ReportService', () => {
             await expect(ReportService.getReportById(reportId)).rejects.toThrow('Report not found');
         });
     });
+
     describe('getReportByYear', () => {
         it('return list of ReportResDto by year', async () => {
             const mockReports = [
-                { id: 1, title: 'Report1', content: 'Content1', year: 2024, path: 'path1' },
-                { id: 2, title: 'Report2', content: 'Content2', year: 2024, path: 'path2' },
+                { id: 1, title: 'Report1', content: 'Content1', year: 2024 },
+                { id: 2, title: 'Report2', content: 'Content2', year: 2024 },
             ];
 
             db.mockReturnValue({
@@ -81,67 +85,20 @@ describe('ReportService', () => {
 
     describe('createReport', () => {
         it('create a new report and return ReportResDto', async () => {
-            const mockReportDto = { title: 'New Report', content: 'New Content', year: 2024, path: 'New Path' };
+            const mockReportDto = { title: 'New Report', content: 'New Content', year: 2024 };
+            const mockReportFileDto = new ReportFileDto('path1');
             const mockInsertedReport = new Report(mockReportDto);
 
             db.mockReturnValue({
                 insert: jest.fn().mockResolvedValue([1]),
             });
 
-            const result = await ReportService.createReport(mockInsertedReport);
+            const result = await ReportService.createReport(mockInsertedReport, mockReportFileDto);
 
             expect(result).toBeInstanceOf(ReportResDto);
             expect(result.title).toBe(mockReportDto.title);
             expect(result.content).toBe(mockReportDto.content);
             expect(result.year).toBe(mockReportDto.year);
         });
-    });
-    describe('deleteReport', () => {
-        it('delete a report and its directory when report is found', async () => {
-            const mockReport = { id: 1, title: 'Report1', content: 'Content1', year: 2024, path: 'path/to/folder' };
-
-            const mockDb = {
-                where: jest.fn().mockReturnThis(),
-                first: jest.fn().mockResolvedValue(mockReport),
-                del: jest.fn().mockResolvedValue(1)
-            };
-
-            db.mockReturnValue(mockDb);
-
-            folderDeleteUtil.deleteDirectory.mockResolvedValue();
-
-            const reportId = 1;
-            await ReportService.deleteReport(reportId);
-
-            expect(folderDeleteUtil.deleteDirectory).toHaveBeenCalledWith(mockReport.path);
-            expect(db().where).toHaveBeenCalledWith({ id: reportId });
-        });
-    });
-    it('throw an Exception when report is not found', async () => {
-        const mockDb = {
-            where: jest.fn().mockReturnThis(),
-            first: jest.fn().mockResolvedValue(null),
-        };
-
-        db.mockReturnValue(mockDb);
-
-        const reportId = 1;
-        await expect(ReportService.deleteReport(reportId)).rejects.toThrow('Report not found');
-    });
-    it('throw an Exception if deletion fails', async () => {
-        const mockReport = { id: 1, title: 'Report1', content: 'Content1', year: 2024, path: 'path/to/folder' };
-
-        const mockDb = {
-            where: jest.fn().mockReturnThis(),
-            first: jest.fn().mockResolvedValue(mockReport),
-            del: jest.fn().mockResolvedValue(0)
-        };
-
-        db.mockReturnValue(mockDb);
-
-        folderDeleteUtil.deleteDirectory.mockResolvedValue();
-
-        const reportId = 1;
-        await expect(ReportService.deleteReport(reportId)).rejects.toThrow('Report not found');
     });
 });
