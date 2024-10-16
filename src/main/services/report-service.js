@@ -51,7 +51,7 @@ class ReportService {
             const fileInsertPromises = reportFileDto.paths.map(async (path) => {
                 return await db('report_files').insert({
                     report_id: insertedId,
-                    path: path,
+                    file_path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
@@ -65,12 +65,11 @@ class ReportService {
             throw new Exception('ValueNotFoundException', 'Report is not found');
         }
         const filePaths = await db('report_files').where({ report_id: id }).select('file_path');
-
         for (const file of filePaths) {
             try {
-                await fileDeleteUtil.deleteFile(file.path);
+                await fileDeleteUtil.deleteFile(file.file_path);
             } catch (error) {
-                console.error(`Failed to delete file at ${file.path}:`, error);
+                console.error(`Failed to delete file at ${file.file_path}:`, error);
             }
         }
         await db('report_files').where({ report_id: id }).del();
