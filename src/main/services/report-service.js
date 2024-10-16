@@ -18,15 +18,10 @@ class ReportService {
             throw new Exception('ValueNotFoundException', 'Report is not found');
         }
         const reportFiles = await db('report_files').where({ report_id: id });
-        return new ReportResDto(report, reportFiles);
+        const reportResDto = new ReportResDto(report, reportFiles);
+        return reportResDto;
     }
-
-    static async getReportByYear(year) {
-        const reports = await db('reports').where({ year: year });
-        const reportResDtos = reports.map(cert => new ReportResDto(cert));
-        return reportResDtos;
-    }
-
+    
     static async editReport(id, reportDto, reportFileDto) {
         const report = await db('reports').where({ id }).first();
         const updateReport = new Report(reportDto);

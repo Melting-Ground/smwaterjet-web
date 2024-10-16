@@ -24,16 +24,6 @@ class ReportController {
         }
     }
 
-    static async getReportByYear(req, res, next) {
-        try {
-            const { year } = req.params;
-            const reportResDtos = await ReportService.getReportByYear(year);
-            res.status(200).json(reportResDtos);
-        } catch (error) {
-            next(error);
-        }
-    }
-
     static async editReport(req, res, next) {
         try {
             const { reportId } = req.params;

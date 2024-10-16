@@ -11,8 +11,6 @@ router.get('/', ReportController.getAllReports);
 
 router.get('/:reportId', ReportController.getReportById);
 
-router.get('/year/:year', ReportController.getReportByYear);
-
 router.put('/:reportId', authenticate, upload.array('newFiles', 10), ReportController.editReport);
 
 router.post('/', authenticate, upload.array('files', 10), ReportController.createReport);
