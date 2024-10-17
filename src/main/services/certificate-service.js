@@ -20,9 +20,10 @@ class CertificateService {
     }
 
     static async createCertificate(certificateDto) {
-        const newCertificate = new Certificate(certificateDto.path);
+        const newCertificate = new Certificate(certificateDto);
         await db('certificates').insert(newCertificate);
-        return new CertiResDto(newCertificate);
+        const certiResDto = new CertiResDto(newCertificate);
+        return certiResDto;
     }
 
     static async deleteCertificate(id) {

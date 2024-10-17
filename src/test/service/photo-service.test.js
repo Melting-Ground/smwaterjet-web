@@ -43,9 +43,7 @@ describe('PhotoService', () => {
             expect(result).toBeInstanceOf(PhotoResDto);
         });
 
-        it('id의 사진이 없을 경우', async () => {
-            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
-
+        it('id의 사진이 없을 경우 예외 처리', async () => {
             db.mockImplementation(() => ({
                 where: jest.fn().mockReturnThis(),
                 first: jest.fn().mockResolvedValue(null)
@@ -83,7 +81,7 @@ describe('PhotoService', () => {
             expect(fileDeleteUtil.deleteFile).toHaveBeenCalledWith(mockPhoto.path);
         });
 
-        it('id의 사진이 없을 경우', async () => {
+        it('id의 사진이 없을 경우 예외 처리', async () => {
             const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
 
             db.mockImplementation(() => ({
@@ -91,10 +89,10 @@ describe('PhotoService', () => {
                 first: jest.fn().mockResolvedValue(null),
             }));
 
-            await expect(PhotoService.deletePhoto(mockPhoto.id)).rejects.toThrow('Photo is not found');
+            await expect(PhotoService.deletePhoto(999)).rejects.toThrow('Photo is not found');
         });
 
-        it('사진 삭제가 실패한 경우', async () => {
+        it('사진 삭제가 실패한 경우 예외 처리', async () => {
             const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
 
             db.mockImplementation(() => ({
@@ -104,7 +102,7 @@ describe('PhotoService', () => {
             }));
             fileDeleteUtil.deleteFile = jest.fn().mockRejectedValue(new Error('Could not delete the file'));
 
-            await expect(PhotoService.deletePhoto(mockPhoto.id)).rejects.toThrow('Could not delete the file');
+            await expect(PhotoService.deletePhoto(999)).rejects.toThrow('Could not delete the file');
             expect(db().del).not.toHaveBeenCalled();
         });
     });
