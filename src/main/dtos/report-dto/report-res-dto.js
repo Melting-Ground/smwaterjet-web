@@ -1,6 +1,7 @@
 class ReportResponseDto {
     constructor(report, files = []) {
         this.id = report.id;
+        this.username = report.username;
         this.title = report.title;
         this.content = report.content;
         this.year = report.year;

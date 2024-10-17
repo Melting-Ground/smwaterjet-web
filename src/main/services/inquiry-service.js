@@ -4,6 +4,7 @@ const InquiryResDto = require("@dtos/inquiry-dto/inquiry-res-dto");
 const Exception = require('@exceptions/exceptions');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const argon2 = require('argon2');
+const createSearchQuery = require('@utils/search-query-builder');
 
 class InquiryService {
     static async getAllInquiries(page, limit) {
@@ -21,6 +22,16 @@ class InquiryService {
 
         const inquiryFiles = await db('inquiry_files').where({ inquiry_id: id });
         return new InquiryResDto(inquiry, inquiryFiles);
+    }
+
+    static async searchInquiries(query, page, limit, searchBy = 'all') {
+        const offset = (page - 1) * limit;
+
+        let inquiriesQuery = createSearchQuery('inquiries', query, searchBy)
+        const inquiries = await inquiriesQuery.limit(limit).offset(offset);
+        const inquiryResDtos = inquiries.map(inquiry => new InquiryResDto(inquiry));
+
+        return inquiryResDtos;
     }
 
     static async createInquiry(inquiryDto, inquiryFileDto) {

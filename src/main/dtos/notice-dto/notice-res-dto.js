@@ -1,6 +1,7 @@
 class NoticeResponseDto {
     constructor(notice, files = []) {
         this.id = notice.id;
+        this.username = notice.username;
         this.title = notice.title;
         this.content = notice.content;
         this.files = Array.isArray(files) ? files : [];
