@@ -14,11 +14,26 @@ class ReportController {
             next(error);
         }
     }
+
     static async getReportById(req, res, next) {
         try {
             const { reportId } = req.params;
             const reportResDto = await ReportService.getReportById(reportId);
             res.status(200).json(reportResDto);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async searchReports(req, res, next) {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 20;
+            const query = req.query.query; 
+            const searchBy = req.query.searchBy || 'all';
+
+            const reportResDtos = await ReportService.searchReports(query, page, limit, searchBy);
+            res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);
         }

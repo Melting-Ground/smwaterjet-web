@@ -3,6 +3,7 @@ const Report = require("@models/report/report");
 const ReportResDto = require("@dtos/report-dto/report-res-dto");
 const Exception = require('@exceptions/exceptions');
 const fileDeleteUtil = require('@utils/file-delete-util');
+const createSearchQuery = require('@utils/search-query-builder');
 
 class ReportService {
     static async getAllReports(page, limit) {
@@ -21,7 +22,18 @@ class ReportService {
         const reportResDto = new ReportResDto(report, reportFiles);
         return reportResDto;
     }
+
+    static async searchReports(query, page, limit, searchBy = 'all') {
+        const offset = (page - 1) * limit;
+
+        let reportsQuery = createSearchQuery('reports', query, searchBy)
+        const reports = await reportsQuery.limit(limit).offset(offset);
+        const reportResDtos = reports.map(report => new ReportResDto(report));
+
+        return reportResDtos;
+    }
     
+
     static async editReport(id, reportDto, reportFileDto) {
         const report = await db('reports').where({ id }).first();
         const updateReport = new Report(reportDto);

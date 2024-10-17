@@ -7,7 +7,7 @@ class NewsService {
     static async getAllNews(page, limit) {
         const offset = (page - 1) * limit;
         const news = await db('news').limit(limit).offset(offset);
-        const newsResDtos = news.map(cert => new NewsResDto(cert));
+        const newsResDtos = news.map(news => new NewsResDto(news));
         return newsResDtos;
     }
 
