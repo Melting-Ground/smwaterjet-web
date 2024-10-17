@@ -8,7 +8,7 @@ class ReportService {
     static async getAllReports(page, limit) {
         const offset = (page - 1) * limit;
         const reports = await db('reports').limit(limit).offset(offset);
-        const reportResDtos = reports.map(cert => new ReportResDto(cert));
+        const reportResDtos = reports.map(report => new ReportResDto(report));
         return reportResDtos;
     }
 

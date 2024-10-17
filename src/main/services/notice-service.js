@@ -3,12 +3,13 @@ const NoticeResDto = require('@dtos/notice-dto/notice-res-dto');
 const Notice = require('@models/notice/notice');
 const Exception = require('@exceptions/exceptions');
 const fileDeleteUtil = require('@utils/file-delete-util');
+const createSearchQuery = require('@utils/search-query-builder');
 
 class NoticeService {
     static async getAllNotices(page, limit) {
         const offset = (page - 1) * limit;
         const notices = await db('notices').limit(limit).offset(offset);
-        const noticeResDtos = notices.map(cert => new NoticeResDto(cert));
+        const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
         return noticeResDtos;
     }
 
@@ -20,6 +21,16 @@ class NoticeService {
 
         const noticeFiles = await db('notice_files').where({ notice_id: id });
         return new NoticeResDto(notice, noticeFiles);
+    }
+
+    static async searchNotices(query, page, limit, searchBy = 'all') {
+        const offset = (page - 1) * limit;
+
+        let noticesQuery = createSearchQuery('notices', query, searchBy)
+        const notices = await noticesQuery.limit(limit).offset(offset);
+        const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
+
+        return noticeResDtos;
     }
 
     static async createNotice(noticeDto, noticeFileDto) {

@@ -7,7 +7,7 @@ const Exception = require('@exceptions/exceptions');
 class PhotoService {
     static async getAllPhotos() {
         const photos = await db('photos');
-        const photoResDtos = photos.map(cert => new PhotoResDto(cert));
+        const photoResDtos = photos.map(photo => new PhotoResDto(photo));
         return photoResDtos;
     }
 
@@ -21,7 +21,7 @@ class PhotoService {
 
     static async getPhotosByYear(year) {
         const photos = await db('photos').where({ year: year });
-        const photoResDtos = photos.map(cert => new PhotoResDto(cert));
+        const photoResDtos = photos.map(photo => new PhotoResDto(photo));
         return photoResDtos;
     }
 

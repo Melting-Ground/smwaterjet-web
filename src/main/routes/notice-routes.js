@@ -11,6 +11,8 @@ router.get('/', NoticeController.getAllNotices);
 
 router.get('/:noticeId', NoticeController.getNoticeById);
 
+router.get('/search', NoticeController.searchNotices);
+
 router.post('/', authenticate, upload.array('files', 10), NoticeController.createNotice);
 
 router.put('/:noticeId', authenticate, upload.array('newFiles', 10), NoticeController.editNotice);

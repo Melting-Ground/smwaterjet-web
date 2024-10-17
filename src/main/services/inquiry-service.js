@@ -10,7 +10,7 @@ class InquiryService {
     static async getAllInquiries(page, limit) {
         const offset = (page - 1) * limit;
         const inquiries = await db('inquiries').limit(limit).offset(offset);
-        const inquiryResDtos = inquiries.map(cert => new InquiryResDto(cert));
+        const inquiryResDtos = inquiries.map(inquiry => new InquiryResDto(inquiry));
         return inquiryResDtos;
     }
 
@@ -39,7 +39,6 @@ class InquiryService {
         const newInquiry = new Inquiry({
             ...inquiryDto,
             password: hashedPassword
-
         });
 
         const result = await db('inquiries').insert(newInquiry);
