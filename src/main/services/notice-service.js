@@ -35,12 +35,11 @@ class NoticeService {
 
     static async createNotice(noticeDto, noticeFileDto) {
         const newNotice = new Notice(noticeDto);
-
-        const result = await db('notices').insert(newNotice);
-        const insertedId = result[0];
+        const filePaths = noticeFileDto.paths.map(file => file.path);
+        const [insertedId] = await db('notices').insert(newNotice);
 
         if (noticeFileDto.isNotEmpty()) {
-            const fileInsertPromises = noticeFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('notice_files').insert({
                     notice_id: insertedId,
                     file_path: path,
@@ -48,19 +47,21 @@ class NoticeService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new NoticeResDto(newNotice, noticeFileDto.paths);
+        return new NoticeResDto(newNotice, filePaths);
     }
 
     static async editNotice(id, noticeDto, noticeFileDto) {
         const notice = await db('notices').where({ id }).first();
+        const filePaths = noticeFileDto.paths.map(file => file.path);
         const updateNotice = new Notice(noticeDto);
+
         if (notice == null) {
             throw new Exception('ValueNotFoundException', 'Notice is not found');
         }
         await db('notices').where({ id }).update(updateNotice);
 
         if (noticeFileDto.isNotEmpty()) {
-            const fileInsertPromises = noticeFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('notice_files').insert({
                     notice_id: id,
                     file_path: path,
@@ -68,7 +69,7 @@ class NoticeService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new NoticeResDto(updateNotice, noticeFileDto.paths);
+        return new NoticeResDto(updateNotice, filePaths);
     }
 
     static async deleteNotice(id) {

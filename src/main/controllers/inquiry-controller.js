@@ -41,9 +41,8 @@ class InquiryController {
 
     static async createInquiry(req, res, next) {
         try {
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const inquiryDto = new InquiryDto(req.body);
-            const inquiryFileDto = new InquiryFileDto(filePaths);
+            const inquiryFileDto = new InquiryFileDto(req.files);
             const inquiryResDto = await InquiryService.createInquiry(inquiryDto, inquiryFileDto);
 
             res.status(201).json(inquiryResDto);
@@ -55,9 +54,8 @@ class InquiryController {
     static async editInquiry(req, res, next) {
         try {
             const { inquiryId } = req.params;
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const inquiryDto = new InquiryDto(req.body);
-            const inquiryFileDto = new InquiryFileDto(filePaths);
+            const inquiryFileDto = new InquiryFileDto(req.files);
 
             const inquiryResDto = await InquiryService.editInquiry(inquiryId, inquiryDto, inquiryFileDto);
 

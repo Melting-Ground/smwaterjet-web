@@ -40,9 +40,8 @@ class NoticeController {
 
     static async createNotice(req, res, next) {
         try {
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const noticeDto = new NoticeDto(req.body);
-            const noticeFileDto = new NoticeFileDto(filePaths);
+            const noticeFileDto = new NoticeFileDto(req.files);
             const noticeResDto = await NoticeService.createNotice(noticeDto, noticeFileDto);
 
             res.status(201).json(noticeResDto);
@@ -54,9 +53,8 @@ class NoticeController {
     static async editNotice(req, res, next) {
         try {
             const { noticeId } = req.params;
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const noticeDto = new NoticeDto(req.body);
-            const noticeFileDto = new NoticeFileDto(filePaths);
+            const noticeFileDto = new NoticeFileDto(req.files);
 
             const noticeResDto = await NoticeService.editNotice(noticeId, noticeDto, noticeFileDto);
 

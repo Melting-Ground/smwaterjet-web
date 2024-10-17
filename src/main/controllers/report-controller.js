@@ -42,9 +42,8 @@ class ReportController {
     static async editReport(req, res, next) {
         try {
             const { reportId } = req.params;
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const reportDto = new ReportDto(req.body);
-            const reportFileDto = new ReportFileDto(filePaths);
+            const reportFileDto = new ReportFileDto(req.files);
 
             const reportResDto = await NoticeService.editReport(reportId, reportDto, reportFileDto);
 
@@ -56,9 +55,8 @@ class ReportController {
 
     static async createReport(req, res, next) {
         try {
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const reportDto = new ReportDto(req.body);
-            const reportFileDto = new ReportFileDto(filePaths);
+            const reportFileDto = new ReportFileDto(req.files);
             const reportResDto = await ReportService.createReport(reportDto, reportFileDto);
 
             res.status(201).json(reportResDto);

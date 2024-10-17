@@ -33,9 +33,9 @@ class ReportService {
         return reportResDtos;
     }
     
-
     static async editReport(id, reportDto, reportFileDto) {
         const report = await db('reports').where({ id }).first();
+        const filePaths = inquiryFileDto.paths.map(file => file.path);
         const updateReport = new Report(reportDto);
         if (report == null) {
             throw new Exception('ValueNotFoundException', 'Report is not found');
@@ -43,7 +43,7 @@ class ReportService {
         await db('reports').where({ id }).update(updateReport);
 
         if (reportFileDto.isNotEmpty()) {
-            const fileInsertPromises = reportFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('report_files').insert({
                     report_id: id,
                     file_path: path,
@@ -51,16 +51,16 @@ class ReportService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new ReportResDto(updateReport, reportFileDto.paths);
+        return new ReportResDto(updateReport, filePaths);
     }
 
     static async createReport(reportDto, reportFileDto) {
         const newReport = new Report(reportDto);
-        const result = await db('reports').insert(newReport);
-        const insertedId = result[0];
+        const filePaths = inquiryFileDto.paths.map(file => file.path);
+        const [insertedId] = await db('reports').insert(newReport);
 
         if (reportFileDto.isNotEmpty()) {
-            const fileInsertPromises = reportFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('report_files').insert({
                     report_id: insertedId,
                     file_path: path,
@@ -68,7 +68,7 @@ class ReportService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new ReportResDto(newReport, reportFileDto.paths);
+        return new ReportResDto(newReport, filePaths);
     }
 
     static async deleteReport(id) {

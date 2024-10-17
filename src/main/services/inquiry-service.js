@@ -36,16 +36,16 @@ class InquiryService {
 
     static async createInquiry(inquiryDto, inquiryFileDto) {
         const hashedPassword = await argon2.hash(inquiryDto.password);
+        const filePaths = inquiryFileDto.paths.map(file => file.path);
         const newInquiry = new Inquiry({
             ...inquiryDto,
             password: hashedPassword
         });
 
-        const result = await db('inquiries').insert(newInquiry);
-        const insertedId = result[0];
-
+        const [insertedId] = await db('inquiries').insert(newInquiry);
+                
         if (inquiryFileDto.isNotEmpty()) {
-            const fileInsertPromises = inquiryFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('inquiry_files').insert({
                     inquiry_id: insertedId,
                     file_path: path,
@@ -53,11 +53,13 @@ class InquiryService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new InquiryResDto(newInquiry, inquiryFileDto.paths);
+        return new InquiryResDto(newInquiry, filePaths);
     }
 
     static async editInquiry(id, inquiryDto, inquiryFileDto) {
         const inquiry = await db('inquiries').where({ id }).first();
+        const filePaths = inquiryFileDto.paths.map(file => file.path);
+
         const updateInquiry = new Inquiry(inquiryDto);
         if (inquiry == null) {
             throw new Exception('ValueNotFoundException', 'Inquiry is not found');
@@ -65,7 +67,7 @@ class InquiryService {
         await db('inquiries').where({ id }).update(updateInquiry);
 
         if (inquiryFileDto.isNotEmpty()) {
-            const fileInsertPromises = inquiryFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('inquiry_files').insert({
                     inquiry_id: id,
                     file_path: path,
@@ -73,7 +75,7 @@ class InquiryService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new InquiryResDto(updateInquiry, inquiryFileDto.paths);
+        return new InquiryResDto(updateInquiry, filePaths);
     }
 
     static async deleteInquiry(id) {
