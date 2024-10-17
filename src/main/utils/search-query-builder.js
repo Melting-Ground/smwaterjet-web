@@ -1,3 +1,5 @@
+const db = require('@configs/knex');
+
 const createSearchQuery = (tableName, query, searchBy) => {
 	let searchQuery = db(tableName);
 
