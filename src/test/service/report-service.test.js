@@ -94,7 +94,7 @@ describe('ReportService', () => {
             });
             const result = await ReportService.createReport(reportDto, reportFileDto);
             expect(result).toBeInstanceOf(ReportResDto);
-            expect(result).toEqual(new ReportResDto(reportDto, reportFileDto.paths));
+            expect(result).toEqual(new ReportResDto(reportDto, reportFileDto));
         });
     });
 

@@ -35,7 +35,7 @@ class ReportService {
     
     static async editReport(id, reportDto, reportFileDto) {
         const report = await db('reports').where({ id }).first();
-        const filePaths = inquiryFileDto.paths.map(file => file.path);
+        const filePaths = reportFileDto.paths.map(file => file.path);
         const updateReport = new Report(reportDto);
         if (report == null) {
             throw new Exception('ValueNotFoundException', 'Report is not found');
@@ -56,7 +56,7 @@ class ReportService {
 
     static async createReport(reportDto, reportFileDto) {
         const newReport = new Report(reportDto);
-        const filePaths = inquiryFileDto.paths.map(file => file.path);
+        const filePaths = reportFileDto.paths.map(file => file.path);
         const [insertedId] = await db('reports').insert(newReport);
 
         if (reportFileDto.isNotEmpty()) {

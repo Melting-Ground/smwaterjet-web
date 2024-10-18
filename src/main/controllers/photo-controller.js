@@ -10,6 +10,7 @@ class PhotoController {
             next(error);
         }
     }
+    
     static async getPhotoById(req, res, next) {
         try {
             const { photoId } = req.params;
@@ -41,7 +42,6 @@ class PhotoController {
             next(error);
         }
     }
-
 
     static async createPhoto(req, res, next) {
         try {

@@ -58,12 +58,13 @@ class InquiryService {
 
     static async editInquiry(id, inquiryDto, inquiryFileDto) {
         const inquiry = await db('inquiries').where({ id }).first();
-        const filePaths = inquiryFileDto.paths.map(file => file.path);
-
-        const updateInquiry = new Inquiry(inquiryDto);
         if (inquiry == null) {
             throw new Exception('ValueNotFoundException', 'Inquiry is not found');
         }
+        
+        const filePaths = inquiryFileDto.paths.map(file => file.path);
+
+        const updateInquiry = new Inquiry(inquiryDto);
         await db('inquiries').where({ id }).update(updateInquiry);
 
         if (inquiryFileDto.isNotEmpty()) {
