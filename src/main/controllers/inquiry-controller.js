@@ -14,6 +14,7 @@ class InquiryController {
             next(error);
         }
     }
+
     static async getInquiryById(req, res, next) {
         try {
             const { inquiryId } = req.params;
@@ -23,11 +24,25 @@ class InquiryController {
             next(error);
         }
     }
+
+    static async searchInquiries(req, res, next) {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 20;
+            const query = req.query.query; 
+            const searchBy = req.query.searchBy || 'all';
+
+            const inquiryResDtos = await InquiryService.searchInquiries(query, page, limit, searchBy);
+            res.status(200).json(inquiryResDtos);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     static async createInquiry(req, res, next) {
         try {
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const inquiryDto = new InquiryDto(req.body);
-            const inquiryFileDto = new InquiryFileDto(filePaths);
+            const inquiryFileDto = new InquiryFileDto(req.files);
             const inquiryResDto = await InquiryService.createInquiry(inquiryDto, inquiryFileDto);
 
             res.status(201).json(inquiryResDto);
@@ -35,12 +50,12 @@ class InquiryController {
             next(error);
         }
     }
+
     static async editInquiry(req, res, next) {
         try {
             const { inquiryId } = req.params;
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const inquiryDto = new InquiryDto(req.body);
-            const inquiryFileDto = new InquiryFileDto(filePaths);
+            const inquiryFileDto = new InquiryFileDto(req.files);
 
             const inquiryResDto = await InquiryService.editInquiry(inquiryId, inquiryDto, inquiryFileDto);
 
@@ -49,6 +64,7 @@ class InquiryController {
             next(error);
         }
     }
+
     static async deleteInquiry(req, res, next) {
         try {
             const { inquiryId } = req.params;

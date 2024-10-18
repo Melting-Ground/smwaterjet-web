@@ -13,6 +13,8 @@ router.get('/:photoId', PhotoController.getPhotoById);
 
 router.get('/year/:year', PhotoController.getPhotosByYear);
 
+router.put('/:photoId', authenticate, PhotoController.editPhoto);
+
 router.post('/', authenticate, upload.single('file'), PhotoController.createPhoto);
 
 router.delete('/:photoId', authenticate, PhotoController.deletePhoto);

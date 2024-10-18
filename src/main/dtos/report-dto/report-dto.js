@@ -1,5 +1,6 @@
 class ReportDto {
-    constructor({ title, content, year }) {
+    constructor({ username, title, content, year }) {
+        this.username = username;
         this.title = title;
         this.content = content;
         this.year = year;

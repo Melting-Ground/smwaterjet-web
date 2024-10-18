@@ -24,11 +24,24 @@ class NoticeController {
         }
     }
 
+    static async searchNotices(req, res, next) {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 20;
+            const query = req.query.query; 
+            const searchBy = req.query.searchBy || 'all';
+
+            const noticeResDtos = await NoticeService.searchNotices(query, page, limit, searchBy);
+            res.status(200).json(noticeResDtos);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     static async createNotice(req, res, next) {
         try {
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const noticeDto = new NoticeDto(req.body);
-            const noticeFileDto = new NoticeFileDto(filePaths);
+            const noticeFileDto = new NoticeFileDto(req.files);
             const noticeResDto = await NoticeService.createNotice(noticeDto, noticeFileDto);
 
             res.status(201).json(noticeResDto);
@@ -40,9 +53,8 @@ class NoticeController {
     static async editNotice(req, res, next) {
         try {
             const { noticeId } = req.params;
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const noticeDto = new NoticeDto(req.body);
-            const noticeFileDto = new NoticeFileDto(filePaths);
+            const noticeFileDto = new NoticeFileDto(req.files);
 
             const noticeResDto = await NoticeService.editNotice(noticeId, noticeDto, noticeFileDto);
 

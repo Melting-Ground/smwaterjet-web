@@ -1,147 +1,155 @@
 const db = require('@configs/knex');
-const Report = require('@models/report');
 const ReportResDto = require('@dtos/report-dto/report-res-dto');
-const Exception = require('@exceptions/exceptions');
-const folderDeleteUtil = require('@utils/folder-delete-util');
 const ReportService = require('@services/report-service');
+const ReportFileDto = require('@dtos/report-dto/report-file-dto');
+const fileDeleteUtil = require('@utils/file-delete-util');
 
+jest.mock('@utils/file-delete-util');
 jest.mock('@configs/knex');
-jest.mock('@utils/folder-delete-util');
 
 describe('ReportService', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
+
     describe('getAllReports', () => {
-        it('return list of ReportResDto', async () => {
+        it('전체 실적현황 조회', async () => {
             const mockReports = [
-                { id: 1, title: 'Report1', content: 'Content1', year: 2024, path: 'path1' },
-                { id: 1, title: 'Report2', content: 'Content2', year: 2024, path: 'path2' },
+                { id: 1, title: 'title1', content: 'content1', year: 2024 },
+                { id: 2, title: 'title2', content: 'content2', year: 2024 },
             ];
-            db.mockReturnValue({
+            db.mockImplementation(() => ({
                 limit: jest.fn().mockReturnThis(),
-                offset: jest.fn().mockReturnThis(),
-                then: jest.fn((callback) => callback(mockReports)),
-            });
+                offset: jest.fn().mockResolvedValue(mockReports),
+            }));
 
-            const page = 1;
-            const limit = 2;
-            const result = await ReportService.getAllReports(page, limit);
-
+            const result = await ReportService.getAllReports(1, 10);
             expect(result).toHaveLength(mockReports.length);
             expect(result[0]).toBeInstanceOf(ReportResDto);
-            expect(result[0].id).toBe(mockReports[0].id);
-            expect(result[1].id).toBe(mockReports[1].id);
         });
     });
+
     describe('getReportById', () => {
-        const reportId = 1;
-        const mockReport = { id: reportId, title: 'Report1', content: 'Content1', year: 2024, path: 'path1' };
-
-        it('return a ReportResDto when report is found', async () => {
-            db.mockImplementation(() => ({
-                where: jest.fn().mockReturnThis(),
-                first: jest.fn().mockResolvedValue(mockReport),
-            }));
-
-            const result = await ReportService.getReportById(reportId);
-            expect(result).toBeInstanceOf(ReportResDto);
-            expect(result.id).toBe(mockReport.id);
-            expect(result.title).toBe(mockReport.title);
-        });
-
-        it('throw an Exception when report is not found', async () => {
-            db.mockImplementation(() => ({
-                where: jest.fn().mockReturnThis(),
-                first: jest.fn().mockResolvedValue(null),
-            }));
-            await expect(ReportService.getReportById(reportId)).rejects.toThrow('Report not found');
-        });
-    });
-    describe('getReportByYear', () => {
-        it('return list of ReportResDto by year', async () => {
-            const mockReports = [
-                { id: 1, title: 'Report1', content: 'Content1', year: 2024, path: 'path1' },
-                { id: 2, title: 'Report2', content: 'Content2', year: 2024, path: 'path2' },
+        it('id로 실적현황 조회', async () => {
+            const mockReport = { id: 1, title: 'title1', content: 'content1', year: 2024 };
+            const mockReportFiles = [
+                { id: 1, report_id: 1, file_path: 'path1' },
+                { id: 2, report_id: 1, file_path: 'path2' },
             ];
 
-            db.mockReturnValue({
-                where: jest.fn().mockResolvedValue(mockReports),
+            db.mockImplementation((tableName) => {
+                if (tableName === 'reports') {
+                    return {
+                        where: jest.fn().mockReturnValueOnce({
+                            first: jest.fn().mockResolvedValue(mockReport),
+                        }),
+                    };
+                } else if (tableName === 'report_files') {
+                    return {
+                        where: jest.fn().mockReturnValueOnce(mockReportFiles),
+                    };
+                }
             });
+            const result = await ReportService.getReportById(1);
+            expect(result).toBeInstanceOf(ReportResDto);
+            expect(result).toEqual(new ReportResDto(mockReport, mockReportFiles));
+        });
 
-            const year = 2024;
-            const result = await ReportService.getReportByYear(year);
+        it('id의 실적현황 없을 경우', async () => {
+            const mockReport = { id: 1, title: 'title1', content: 'content1', year: 2024 };
 
-            expect(result).toHaveLength(mockReports.length);
-            expect(result[0]).toBeInstanceOf(ReportResDto);
-            expect(result[0].id).toBe(mockReports[0].id);
-            expect(result[1].id).toBe(mockReports[1].id);
+            db.mockImplementation(() => ({
+                where: jest.fn().mockReturnThis(),
+                first: jest.fn().mockResolvedValue(null)
+            }));
+            const reportId = 999;
+            await expect(ReportService.getReportById(reportId)).rejects.toThrow('Report is not found');
         });
     });
 
     describe('createReport', () => {
-        it('create a new report and return ReportResDto', async () => {
-            const mockReportDto = { title: 'New Report', content: 'New Content', year: 2024, path: 'New Path' };
-            const mockInsertedReport = new Report(mockReportDto);
+        it('새로운 실적현황 생성', async () => {
+            const mockReport = { id: 1, title: 'title1', content: 'content1', year: 2024 };
+            const mockReportFiles = [
+                { id: 1, report_id: 1, file_path: 'path1' },
+                { id: 2, report_id: 1, file_path: 'path2' },
+            ];
+            const reportDto = { title: 'title1', content: 'content1', year: 2024 };
+            const reportFileDto = new ReportFileDto([
+                { report_id: 1, file_path: 'path1' },
+                { report_id: 1, file_path: 'path2' },
+            ]);
+            const insertedId = 1;
 
-            db.mockReturnValue({
-                insert: jest.fn().mockResolvedValue([1]),
+            db.mockImplementation((tableName) => {
+                if (tableName === 'reports') {
+                    return {
+                        insert: jest.fn().mockResolvedValue([insertedId]),
+                    };
+                } else if (tableName === 'report_files') {
+                    return {
+                        insert: jest.fn().mockResolvedValue([]),
+                    };
+                }
             });
-
-            const result = await ReportService.createReport(mockInsertedReport);
-
+            const result = await ReportService.createReport(reportDto, reportFileDto);
             expect(result).toBeInstanceOf(ReportResDto);
-            expect(result.title).toBe(mockReportDto.title);
-            expect(result.content).toBe(mockReportDto.content);
-            expect(result.year).toBe(mockReportDto.year);
+            expect(result).toEqual(new ReportResDto(reportDto, reportFileDto));
         });
     });
+
     describe('deleteReport', () => {
-        it('delete a report and its directory when report is found', async () => {
-            const mockReport = { id: 1, title: 'Report1', content: 'Content1', year: 2024, path: 'path/to/folder' };
+        it('id로 등록된 실적현황 삭제', async () => {
+            const mockReport = { id: 1, title: 'title1', content: 'content1', year: 2024 };
+            const mockReportFiles = [
+                { file_path: 'path1' },
+                { file_path: 'path2' },
+            ];
 
-            const mockDb = {
+            db.mockImplementation((table) => {
+                if (table === 'reports') {
+                    return {
+                        where: jest.fn().mockReturnValue({
+                            first: jest.fn().mockResolvedValue(mockReport),
+                            del: jest.fn().mockResolvedValue(1),
+                        }),
+                    };
+                } else if (table === 'report_files') {
+                    return {
+                        where: jest.fn().mockReturnValue({
+                            select: jest.fn().mockResolvedValue(mockReportFiles),
+                            del: jest.fn().mockResolvedValue(mockReportFiles.length),
+                        }),
+                    };
+                }
+            });
+            fileDeleteUtil.deleteFile = jest.fn().mockResolvedValue();
+            await ReportService.deleteReport(1);
+            expect(fileDeleteUtil.deleteFile).toHaveBeenCalledWith('path1');
+            expect(fileDeleteUtil.deleteFile).toHaveBeenCalledWith('path2');
+        });
+        it('id의 실적현황 없을 경우', async () => {
+            const mockReport = { id: 1, title: 'title1', content: 'content1', year: 2024 };
+            db.mockImplementation(() => ({
                 where: jest.fn().mockReturnThis(),
-                first: jest.fn().mockResolvedValue(mockReport),
-                del: jest.fn().mockResolvedValue(1)
-            };
-
-            db.mockReturnValue(mockDb);
-
-            folderDeleteUtil.deleteDirectory.mockResolvedValue();
-
-            const reportId = 1;
-            await ReportService.deleteReport(reportId);
-
-            expect(folderDeleteUtil.deleteDirectory).toHaveBeenCalledWith(mockReport.path);
-            expect(db().where).toHaveBeenCalledWith({ id: reportId });
+                first: jest.fn().mockResolvedValue(null),
+            }));
+            await expect(ReportService.deleteReport(999)).rejects.toThrow('Report is not found');
         });
     });
-    it('throw an Exception when report is not found', async () => {
-        const mockDb = {
-            where: jest.fn().mockReturnThis(),
-            first: jest.fn().mockResolvedValue(null),
-        };
+    describe('deleteFile', () => {
+        it('fileId로 파일 삭제', async () => {
+            const mockReportFiles = { id: 1, report_id: 1, file_path: 'path1'};
+            db.mockImplementation(() => ({
+                where: jest.fn().mockReturnThis(),
+                select: jest.fn().mockReturnThis(),
+                first: jest.fn().mockResolvedValue(mockReportFiles),
+                del: jest.fn().mockResolvedValue(1),
+            }));
 
-        db.mockReturnValue(mockDb);
-
-        const reportId = 1;
-        await expect(ReportService.deleteReport(reportId)).rejects.toThrow('Report not found');
-    });
-    it('throw an Exception if deletion fails', async () => {
-        const mockReport = { id: 1, title: 'Report1', content: 'Content1', year: 2024, path: 'path/to/folder' };
-
-        const mockDb = {
-            where: jest.fn().mockReturnThis(),
-            first: jest.fn().mockResolvedValue(mockReport),
-            del: jest.fn().mockResolvedValue(0)
-        };
-
-        db.mockReturnValue(mockDb);
-
-        folderDeleteUtil.deleteDirectory.mockResolvedValue();
-
-        const reportId = 1;
-        await expect(ReportService.deleteReport(reportId)).rejects.toThrow('Report not found');
+            fileDeleteUtil.deleteFile = jest.fn().mockResolvedValue();
+            await ReportService.deleteFile(1);
+            expect(fileDeleteUtil.deleteFile).toHaveBeenCalledWith('path1');
+        });
     });
 });

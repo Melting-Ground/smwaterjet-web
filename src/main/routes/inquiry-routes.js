@@ -4,13 +4,15 @@ const creatMulter = require("@configs/multer-config");
 const userAuthenticate = require('@middlewares/user-authentication');
 const authenticate = require('@middlewares/jwt-authentication');
 
-const upload = creatMulter('inquiries')
+const upload = creatMulter('inquiries');
 
 const router = express.Router();
 
 router.get('/', InquiryController.getAllInquiries);
 
 router.get('/:inquiryId', InquiryController.getInquiryById);
+
+router.get('/search', InquiryController.searchInquiries);
 
 router.post('/', upload.array('files', 10), InquiryController.createInquiry);
 
@@ -20,6 +22,6 @@ router.delete('/:inquiryId', userAuthenticate, InquiryController.deleteInquiry);
 
 router.delete('/admin/:inquiryId', authenticate, InquiryController.deleteInquiry);
 
-router.delete('/file/:inquiryFileId', InquiryController.deleteFile);
+router.delete('/files/:inquiryFileId', InquiryController.deleteFile);
 
 module.exports = router;

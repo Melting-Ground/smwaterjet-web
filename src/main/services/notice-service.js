@@ -3,12 +3,13 @@ const NoticeResDto = require('@dtos/notice-dto/notice-res-dto');
 const Notice = require('@models/notice/notice');
 const Exception = require('@exceptions/exceptions');
 const fileDeleteUtil = require('@utils/file-delete-util');
+const createSearchQuery = require('@utils/search-query-builder');
 
 class NoticeService {
     static async getAllNotices(page, limit) {
         const offset = (page - 1) * limit;
         const notices = await db('notices').limit(limit).offset(offset);
-        const noticeResDtos = notices.map(cert => new NoticeResDto(cert));
+        const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
         return noticeResDtos;
     }
 
@@ -22,42 +23,53 @@ class NoticeService {
         return new NoticeResDto(notice, noticeFiles);
     }
 
+    static async searchNotices(query, page, limit, searchBy = 'all') {
+        const offset = (page - 1) * limit;
+
+        let noticesQuery = createSearchQuery('notices', query, searchBy)
+        const notices = await noticesQuery.limit(limit).offset(offset);
+        const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
+
+        return noticeResDtos;
+    }
+
     static async createNotice(noticeDto, noticeFileDto) {
         const newNotice = new Notice(noticeDto);
-
-        const result = await db('notices').insert(newNotice);
-        const insertedId = result[0];
+        const filePaths = noticeFileDto.paths.map(file => file.path);
+        const [insertedId] = await db('notices').insert(newNotice);
 
         if (noticeFileDto.isNotEmpty()) {
-            const fileInsertPromises = noticeFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('notice_files').insert({
                     notice_id: insertedId,
-                    path: path,
+                    file_path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
         }
-        return new NoticeResDto(newNotice);
+        return new NoticeResDto(newNotice, filePaths);
     }
 
     static async editNotice(id, noticeDto, noticeFileDto) {
         const notice = await db('notices').where({ id }).first();
+        const filePaths = noticeFileDto.paths.map(file => file.path);
         const updateNotice = new Notice(noticeDto);
+
         if (notice == null) {
             throw new Exception('ValueNotFoundException', 'Notice is not found');
         }
         await db('notices').where({ id }).update(updateNotice);
 
         if (noticeFileDto.isNotEmpty()) {
-            const fileInsertPromises = noticeFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('notice_files').insert({
                     notice_id: id,
-                    path: path,
+                    file_path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
         }
-        return new NoticeResDto(updateNotice);
+        return new NoticeResDto(updateNotice, filePaths);
     }
 
     static async deleteNotice(id) {
@@ -79,20 +91,15 @@ class NoticeService {
     }
 
     static async deleteFile(id) {
-        try {
-            const file = await db('notice_files').where({ id }).select('file_path').first();
-            if (!file) {
-                throw new Exception('ValueNotFoundException', 'NoticeFiles is not found');
-            }
-            const filePath = file.file_path;
-
-            await db('notice_files').where({ id }).del();
-
-            await fileDeleteUtil.deleteFile(filePath);
-
-        } catch (error) {
-            console.error(`Failed to delete file:`, error);
+        const file = await db('notice_files').where({ id }).select('file_path').first();
+        if (file == null) {
+            throw new Exception('ValueNotFoundException', 'NoticeFile is not found');
         }
+        const filePath = file.file_path;
+
+        await db('notice_files').where({ id }).del();
+
+        await fileDeleteUtil.deleteFile(filePath);
     }
 }
 

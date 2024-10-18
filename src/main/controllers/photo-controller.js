@@ -10,6 +10,7 @@ class PhotoController {
             next(error);
         }
     }
+    
     static async getPhotoById(req, res, next) {
         try {
             const { photoId } = req.params;
@@ -25,6 +26,18 @@ class PhotoController {
             const { year } = req.params;
             const photoResDtos = await PhotoService.getPhotosByYear(year);
             res.status(200).json(photoResDtos);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async editPhoto(req, res, next) {
+        try {
+            const { photoId } = req.params;
+            const photoDto = new PhotoDto(req.body);
+
+            const photoResDto = await PhotoService.editPhoto(photoId,photoDto);
+            res.status(200).json(photoResDto);
         } catch (error) {
             next(error);
         }

@@ -14,6 +14,7 @@ class ReportController {
             next(error);
         }
     }
+
     static async getReportById(req, res, next) {
         try {
             const { reportId } = req.params;
@@ -24,11 +25,29 @@ class ReportController {
         }
     }
 
-    static async getReportByYear(req, res, next) {
+    static async searchReports(req, res, next) {
         try {
-            const { year } = req.params;
-            const reportResDtos = await ReportService.getReportByYear(year);
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 20;
+            const query = req.query.query; 
+            const searchBy = req.query.searchBy || 'all';
+
+            const reportResDtos = await ReportService.searchReports(query, page, limit, searchBy);
             res.status(200).json(reportResDtos);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async editReport(req, res, next) {
+        try {
+            const { reportId } = req.params;
+            const reportDto = new ReportDto(req.body);
+            const reportFileDto = new ReportFileDto(req.files);
+
+            const reportResDto = await NoticeService.editReport(reportId, reportDto, reportFileDto);
+
+            res.status(200).json(reportResDto);
         } catch (error) {
             next(error);
         }
@@ -36,9 +55,8 @@ class ReportController {
 
     static async createReport(req, res, next) {
         try {
-            const filePaths = req.files ? req.files.map(file => file.path) : [];
             const reportDto = new ReportDto(req.body);
-            const reportFileDto = new ReportFileDto(filePaths);
+            const reportFileDto = new ReportFileDto(req.files);
             const reportResDto = await ReportService.createReport(reportDto, reportFileDto);
 
             res.status(201).json(reportResDto);
@@ -53,6 +71,16 @@ class ReportController {
             await ReportService.deleteReport(reportId);
 
             res.status(200).json({ message: 'Report deleted successfully' });
+        } catch (error) {
+            next(error);
+        }
+    }
+    static async deleteFile(req, res, next) {
+        try {
+            const { reportFileId } = req.params;
+            await ReportService.deleteFile(reportFileId);
+
+            res.status(200).json({ message: 'ReportFile deleted successfully' });
         } catch (error) {
             next(error);
         }

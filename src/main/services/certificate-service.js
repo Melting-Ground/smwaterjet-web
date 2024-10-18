@@ -14,29 +14,27 @@ class CertificateService {
     static async getCertificateById(id) {
         const certificate = await db('certificates').where({ id }).first();
         if (certificate == null) {
-            throw new Exception('ValueNotFoundException', 'Certificate not found');
+            throw new Exception('ValueNotFoundException', 'Certificate is not found');
         }
         return new CertiResDto(certificate);
     }
 
     static async createCertificate(certificateDto) {
-        const newCertificate = new Certificate(certificateDto.path);
+        const newCertificate = new Certificate(certificateDto);
         await db('certificates').insert(newCertificate);
-        return new CertiResDto(newCertificate);
+        const certiResDto = new CertiResDto(newCertificate);
+        return certiResDto;
     }
 
     static async deleteCertificate(id) {
         const certificate = await db('certificates').where({ id }).first();
-        if (!certificate) {
-            throw new Exception('ValueNotFoundException', 'Certificate not found');
+        if (certificate == null) {
+            throw new Exception('ValueNotFoundException', 'Certificate is not found');
         }
         const filePath = certificate.path;
         await fileDeleteUtil.deleteFile(filePath);
 
-        const isDeleted = await db('certificates').where({ id }).del();
-        if (isDeleted == 0) {
-            throw new Exception('ValueNotFoundException', 'Certificate not found');
-        }
+        await db('certificates').where({ id }).del();
     }
 }
 

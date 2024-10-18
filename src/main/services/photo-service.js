@@ -7,21 +7,21 @@ const Exception = require('@exceptions/exceptions');
 class PhotoService {
     static async getAllPhotos() {
         const photos = await db('photos');
-        const photoResDtos = photos.map(cert => new PhotoResDto(cert));
+        const photoResDtos = photos.map(photo => new PhotoResDto(photo));
         return photoResDtos;
     }
 
     static async getPhotoById(id) {
         const photo = await db('photos').where({ id }).first();
         if (photo == null) {
-            throw new Exception('ValueNotFoundException', 'Photo not found');
+            throw new Exception('ValueNotFoundException', 'Photo is not found');
         }
         return new PhotoResDto(photo);
     }
 
     static async getPhotosByYear(year) {
         const photos = await db('photos').where({ year: year });
-        const photoResDtos = photos.map(cert => new PhotoResDto(cert));
+        const photoResDtos = photos.map(photo => new PhotoResDto(photo));
         return photoResDtos;
     }
 
@@ -31,18 +31,26 @@ class PhotoService {
         return new PhotoResDto(newPhoto);
     }
 
+    static async editPhoto(id, photoDto) {
+        const photo = await db('photos').where({ id }).first();
+        const updatePhoto = new Photo(photoDto);
+
+        if (photo == null) {
+            throw new Exception('ValueNotFoundException', 'Photo is not found');
+        }
+        await db('photos').where({ id }).update(updatePhoto);
+        return new PhotoResDto(updatePhoto);
+    }
+
     static async deletePhoto(id) {
         const photo = await db('photos').where({ id }).first();
         if (photo == null) {
-            throw new Exception('ValueNotFoundException', 'Photo not found');
+            throw new Exception('ValueNotFoundException', 'Photo is not found');
         }
         const filePath = photo.path;
         await fileDeleteUtil.deleteFile(filePath);
 
-        const isDeleted = await db('photos').where({ id }).del();
-        if (isDeleted == 0) {
-            throw new Exception('ValueNotFoundException', 'Photo not found');
-        }
+        await db('photos').where({ id }).del();
     }
 }
 

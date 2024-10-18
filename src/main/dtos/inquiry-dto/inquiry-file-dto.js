@@ -1,6 +1,6 @@
 class InquiryFileDto {
     constructor(paths) {
-        this.paths = paths;
+        this.paths = Array.isArray(paths) ? paths : [];
     }
     isEmpty() {
         return !Array.isArray(this.paths) || this.paths.length === 0;
@@ -11,4 +11,4 @@ class InquiryFileDto {
     }
 }
 
-module.exports = InquiryFileDto
+module.exports = InquiryFileDto;

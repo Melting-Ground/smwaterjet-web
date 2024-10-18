@@ -11,7 +11,7 @@ const loginAdmin = async (adminDto) => {
     console.log(admin);
 
     if (admin == null) {
-        throw new Exception('ValueNotFoundException', 'Admin not found');
+        throw new Exception('ValueNotFoundException', 'Admin is not found');
     }
 
     const passwordValid = await argon2.verify(admin.password_hash, adminDto.password);

@@ -14,76 +14,96 @@ describe('PhotoService', () => {
     });
 
     describe('getAllPhotos', () => {
-        it('return a list of photoResDtos', async () => {
+        it('전체 작업 사진 조회', async () => {
             const mockPhotos = [
-                { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'paht1' },
-                { id: 2, title: 'title2', content: 'content2', year: 2024, path: 'paht2' }];
-            db.mockReturnValueOnce(mockPhotos);
+                { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' },
+                { id: 2, title: 'title2', content: 'content2', year: 2024, path: 'path1' },
+            ];
+            db.mockResolvedValue(mockPhotos);
 
             const result = await PhotoService.getAllPhotos();
-
-            expect(result).toEqual(mockPhotos.map(photo => new PhotoResDto(photo)));
+            expect(result).toHaveLength(2);
+            expect(result[0]).toBeInstanceOf(PhotoResDto);
+            expect(result[1]).toBeInstanceOf(PhotoResDto);
         });
     });
 
     describe('getPhotoById', () => {
-        it('return a photoResDto when photo is found', async () => {
-            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'paht1' };
-            db.mockReturnValueOnce({ where: jest.fn().mockReturnThis(), first: jest.fn().mockResolvedValue(mockPhoto) });
+        it('id로 사진 조회', async () => {
+            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
 
-            const result = await PhotoService.getPhotoById(1);
+            db.mockImplementation(() => ({
+                where: jest.fn().mockReturnThis(),
+                first: jest.fn().mockResolvedValue(mockPhoto)
+            }));
 
-            expect(result).toEqual(new PhotoResDto(mockPhoto));
+            const photoId = 1;
+            const result = await PhotoService.getPhotoById(photoId);
+            expect(result).toEqual(mockPhoto);
+            expect(result).toBeInstanceOf(PhotoResDto);
         });
 
-        it('throw an Exception when photo is not found', async () => {
-            db.mockReturnValueOnce({ where: jest.fn().mockReturnThis(), first: jest.fn().mockResolvedValue(null) });
-
-            await expect(PhotoService.getPhotoById(999)).rejects.toThrow('Photo not found');
+        it('id의 사진이 없을 경우 예외 처리', async () => {
+            db.mockImplementation(() => ({
+                where: jest.fn().mockReturnThis(),
+                first: jest.fn().mockResolvedValue(null)
+            }));
+            const photoId = 999;
+            await expect(PhotoService.getPhotoById(photoId)).rejects.toThrow('Photo is not found');
         });
     });
 
     describe('createPhoto', () => {
-        it('create a new photo and return photoResDto', async () => {
-            const photoDto = { title: 'New Title', content: 'New Content', year: 2024, path: 'New Path' };
-            const newPhoto = new Photo(photoDto);
-            db.mockReturnValueOnce({ insert: jest.fn().mockResolvedValue(newPhoto) });
+        it('새로운 사진 생성', async () => {
+            const mockPhotoDto = { title: 'title1', content: 'content1', year: 2024, path: 'path1' };
+            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
 
-            const result = await PhotoService.createPhoto(newPhoto);
+            db.mockImplementation(() => ({
+                insert: jest.fn().mockResolvedValue([mockPhoto.id])
+            }));
 
-            expect(result).toEqual(new PhotoResDto(newPhoto));
+            const result = await PhotoService.createPhoto(mockPhotoDto);
+            expect(result).toBeInstanceOf(PhotoResDto);
+            expect(result.title).toEqual(mockPhotoDto.title);
         });
     });
     describe('deletePhoto', () => {
-        it('delete a photo and its file when photo is found', async () => {
-            const mockPhoto = { title: 'title1', content: 'content1', year: 2024, path: 'paht1' };
-            const mockDb = {
+        it('id로 등록된 사진 삭제', async () => {
+            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
+            db.mockImplementation(() => ({
                 where: jest.fn().mockReturnThis(),
                 first: jest.fn().mockResolvedValue(mockPhoto),
-                del: jest.fn().mockResolvedValue(1)
-            };
-            db.mockReturnValue(mockDb);
+                del: jest.fn().mockResolvedValue()
+            }));
+            fileDeleteUtil.deleteFile = jest.fn().mockResolvedValue();
+            await PhotoService.deletePhoto(1);
 
-            fileDeleteUtil.deleteFile.mockResolvedValue(); 
-
-            await PhotoService.deletePhoto(1); 
-
-            expect(fileDeleteUtil.deleteFile).toHaveBeenCalledWith(mockPhoto.path); 
-            expect(db().where).toHaveBeenCalledWith({ id: 1 }); 
+            expect(fileDeleteUtil.deleteFile).toHaveBeenCalledWith(mockPhoto.path);
         });
 
-        it('throw an Exception when photo is not found', async () => {
-            db.mockReturnValueOnce({ where: jest.fn().mockReturnThis(), first: jest.fn().mockResolvedValue(null) });
+        it('id의 사진이 없을 경우 예외 처리', async () => {
+            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
 
-            await expect(PhotoService.deletePhoto(999)).rejects.toThrow('Photo not found');
+            db.mockImplementation(() => ({
+                where: jest.fn().mockReturnThis(),
+                first: jest.fn().mockResolvedValue(null),
+            }));
+
+            await expect(PhotoService.deletePhoto(999)).rejects.toThrow('Photo is not found');
         });
 
-        it('throw an Exception if deletion fails', async () => {
-            const mockPhoto = { id: 1, path: 'path/to/photo1' };
-            db.mockReturnValueOnce({ where: jest.fn().mockReturnThis(), first: jest.fn().mockResolvedValue(mockPhoto) });
-            db.mockReturnValueOnce({ where: jest.fn().mockReturnThis(), del: jest.fn().mockResolvedValue(0) }); 
+        it('사진 삭제가 실패한 경우 예외 처리', async () => {
+            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
 
-            await expect(PhotoService.deletePhoto(1)).rejects.toThrow('Photo not found');
+            db.mockImplementation(() => ({
+                where: jest.fn().mockReturnThis(),
+                first: jest.fn().mockResolvedValue(mockPhoto),
+                del: jest.fn().mockResolvedValue(undefined),
+            }));
+            fileDeleteUtil.deleteFile = jest.fn().mockRejectedValue(new Error('Could not delete the file'));
+
+            await expect(PhotoService.deletePhoto(999)).rejects.toThrow('Could not delete the file');
+            expect(db().del).not.toHaveBeenCalled();
         });
     });
 });

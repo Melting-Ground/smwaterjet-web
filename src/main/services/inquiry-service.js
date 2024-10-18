@@ -4,12 +4,13 @@ const InquiryResDto = require("@dtos/inquiry-dto/inquiry-res-dto");
 const Exception = require('@exceptions/exceptions');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const argon2 = require('argon2');
+const createSearchQuery = require('@utils/search-query-builder');
 
 class InquiryService {
     static async getAllInquiries(page, limit) {
         const offset = (page - 1) * limit;
         const inquiries = await db('inquiries').limit(limit).offset(offset);
-        const inquiryResDtos = inquiries.map(cert => new InquiryResDto(cert));
+        const inquiryResDtos = inquiries.map(inquiry => new InquiryResDto(inquiry));
         return inquiryResDtos;
     }
 
@@ -23,47 +24,59 @@ class InquiryService {
         return new InquiryResDto(inquiry, inquiryFiles);
     }
 
+    static async searchInquiries(query, page, limit, searchBy = 'all') {
+        const offset = (page - 1) * limit;
+
+        let inquiriesQuery = createSearchQuery('inquiries', query, searchBy)
+        const inquiries = await inquiriesQuery.limit(limit).offset(offset);
+        const inquiryResDtos = inquiries.map(inquiry => new InquiryResDto(inquiry));
+
+        return inquiryResDtos;
+    }
+
     static async createInquiry(inquiryDto, inquiryFileDto) {
         const hashedPassword = await argon2.hash(inquiryDto.password);
+        const filePaths = inquiryFileDto.paths.map(file => file.path);
         const newInquiry = new Inquiry({
             ...inquiryDto,
             password: hashedPassword
-
         });
-        
-        const result = await db('inquiries').insert(newInquiry);
-        const insertedId = result[0];
 
+        const [insertedId] = await db('inquiries').insert(newInquiry);
+                
         if (inquiryFileDto.isNotEmpty()) {
-            const fileInsertPromises = inquiryFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('inquiry_files').insert({
                     inquiry_id: insertedId,
-                    path: path,
+                    file_path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
         }
-        return new InquiryResDto(newInquiry);
+        return new InquiryResDto(newInquiry, filePaths);
     }
 
     static async editInquiry(id, inquiryDto, inquiryFileDto) {
         const inquiry = await db('inquiries').where({ id }).first();
-        const updateInquiry = new Inquiry(inquiryDto);
-        if (!inquiry) {
+        if (inquiry == null) {
             throw new Exception('ValueNotFoundException', 'Inquiry is not found');
         }
+        
+        const filePaths = inquiryFileDto.paths.map(file => file.path);
+
+        const updateInquiry = new Inquiry(inquiryDto);
         await db('inquiries').where({ id }).update(updateInquiry);
 
         if (inquiryFileDto.isNotEmpty()) {
-            const fileInsertPromises = inquiryFileDto.paths.map(async (path) => {
+            const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('inquiry_files').insert({
                     inquiry_id: id,
-                    path: path,
+                    file_path: path,
                 });
             });
             await Promise.all(fileInsertPromises);
         }
-        return new InquiryResDto(updateInquiry);
+        return new InquiryResDto(updateInquiry, filePaths);
     }
 
     static async deleteInquiry(id) {
@@ -85,20 +98,15 @@ class InquiryService {
     }
 
     static async deleteFile(id) {
-        try {
-            const file = await db('inquiry_files').where({ id }).select('file_path').first();
-            if (!file) {
-                throw new Exception('ValueNotFoundException', 'InquiryFile is not found');
-            }
-            const filePath = file.file_path; 
-
-            await db('inquiry_files').where({ id }).del();
-
-            await fileDeleteUtil.deleteFile(filePath);
-
-        } catch (error) {
-            console.error(`Failed to delete file:`, error); 
+        const file = await db('inquiry_files').where({ id }).select('file_path').first();
+        if (file == null) {
+            throw new Exception('ValueNotFoundException', 'InquiryFile is not found');
         }
+        const filePath = file.file_path;
+
+        await db('inquiry_files').where({ id }).del();
+
+        await fileDeleteUtil.deleteFile(filePath);
     }
 }
 

@@ -11,10 +11,14 @@ router.get('/', ReportController.getAllReports);
 
 router.get('/:reportId', ReportController.getReportById);
 
-router.get('/year/:year', ReportController.getReportByYear);
+router.get('/search', ReportController.searchReports);
+
+router.put('/:reportId', authenticate, upload.array('newFiles', 10), ReportController.editReport);
 
 router.post('/', authenticate, upload.array('files', 10), ReportController.createReport);
 
 router.delete('/:reportId', authenticate, ReportController.deleteReport);
+
+router.delete('/file/reportFileId', authenticate, ReportController.deleteFile);
 
 module.exports = router;

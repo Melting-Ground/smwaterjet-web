@@ -1,5 +1,6 @@
 class Notice {
-    constructor({title, content}) {
+    constructor({username, title, content}) {
+        this.username = username;
         this.title = title;
         this.content = content;
     }
