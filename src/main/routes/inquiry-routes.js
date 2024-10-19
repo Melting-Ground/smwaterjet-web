@@ -9,19 +9,15 @@ const upload = creatMulter('inquiries');
 const router = express.Router();
 
 router.get('/', InquiryController.getAllInquiries);
-
-router.get('/:inquiryId', InquiryController.getInquiryById);
-
 router.get('/search', InquiryController.searchInquiries);
+router.get('/:inquiryId', InquiryController.getInquiryById);
 
 router.post('/', upload.array('files', 10), InquiryController.createInquiry);
 
 router.put('/:inquiryId', userAuthenticate, upload.array('newFiles', 10), InquiryController.editInquiry);
 
-router.delete('/:inquiryId', userAuthenticate, InquiryController.deleteInquiry);
-
 router.delete('/admin/:inquiryId', authenticate, InquiryController.deleteInquiry);
-
 router.delete('/files/:inquiryFileId', InquiryController.deleteFile);
+router.delete('/:inquiryId', userAuthenticate, InquiryController.deleteInquiry);
 
 module.exports = router;

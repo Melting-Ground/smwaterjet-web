@@ -23,7 +23,7 @@ class NoticeService {
         return new NoticeResDto(notice, noticeFiles);
     }
 
-    static async searchNotices(query, page, limit, searchBy = 'all') {
+    static async searchNotices(query, page, limit, searchBy) {
         const offset = (page - 1) * limit;
 
         let noticesQuery = createSearchQuery('notices', query, searchBy)

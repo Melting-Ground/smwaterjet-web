@@ -8,10 +8,8 @@ const upload = creatMulter('photos');
 const router = express.Router();
 
 router.get('/', PhotoController.getAllPhotos);
-
-router.get('/:photoId', PhotoController.getPhotoById);
-
 router.get('/year/:year', PhotoController.getPhotosByYear);
+router.get('/:photoId', PhotoController.getPhotoById);
 
 router.put('/:photoId', authenticate, PhotoController.editPhoto);
 
