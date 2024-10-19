@@ -4,7 +4,7 @@ const Exception = require('@exceptions/exceptions');
 
 const authenticate = async (req, res, next) => {
     try {
-        const authHeaderValue = req.body.headers && req.body.headers['Authorization'];
+        const authHeaderValue = req.headers['authorization'];
 
         if (authHeaderValue == null) {
             throw new Exception('AuthenticationException', 'Authorization header is missing');
