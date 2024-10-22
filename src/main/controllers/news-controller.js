@@ -1,13 +1,14 @@
 const NewsDto = require("@dtos/news-dto/news-dto");
 const NewsService = require('@services/news-service');
+const Pagination = require('@utils/pagination');
+const SearchParameters = require('@utils/search-parameters');
 
 class NewsController {
     static async getAllNews(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
+            const pagination = new Pagination(req.query.page, req.query.limit);
 
-            const newsResDtos = await NewsService.getAllNews(page, limit);
+            const newsResDtos = await NewsService.getAllNews(pagination);
             res.status(200).json(newsResDtos);
         } catch (error) {
             next(error);

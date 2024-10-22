@@ -7,9 +7,9 @@ const loginAdmin = async (adminDto) => {
     const admin = await db('admins')
         .where({ phone_number: adminDto.phoneNumber })
         .first();
-        
+
     if (admin == null) {
-        throw new Exception('ValueNotFoundException', 'Admin is not found');
+        throw new Exception('AuthenticationException', 'Admin is not found');
     }
 
     const passwordValid = await argon2.verify(admin.password_hash, adminDto.password);

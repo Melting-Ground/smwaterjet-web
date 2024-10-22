@@ -1,14 +1,14 @@
 const ReportDto = require('@dtos/report-dto/report-dto');
 const ReportService = require('@services/report-service');
 const ReportFileDto = require('@dtos/report-dto/report-file-dto');
+const Pagination = require('@utils/pagination');
+const SearchParameters = require('@utils/search-parameters');
 
 class ReportController {
     static async getAllReports(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
-
-            const reportResDtos = await ReportService.getAllReports(page, limit);
+            const pagination = new Pagination(req.query.page, req.query.limit);
+            const reportResDtos = await ReportService.getAllReports(pagination);
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);
@@ -27,12 +27,10 @@ class ReportController {
 
     static async searchReports(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
-            const query = req.query.query; 
-            const searchBy = req.query.searchBy || 'all';
+            const pagination = new Pagination(req.query.page, req.query.limit);
+            const searchParams = new SearchParameters(req.query.query, req.query.searchBy);
 
-            const reportResDtos = await ReportService.searchReports(query, page, limit, searchBy);
+            const reportResDtos = await ReportService.searchReports(pagination, searchParams);
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);

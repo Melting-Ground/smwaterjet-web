@@ -1,14 +1,14 @@
 const NoticeDto = require("@dtos/notice-dto/notice-dto");
 const NoticeFileDto = require("@dtos/notice-dto/notice-file-dto");
 const NoticeService = require('@services/notice-service');
+const Pagination = require('@utils/pagination');
+const SearchParameters = require('@utils/search-parameters');
 
 class NoticeController {
     static async getAllNotices(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
-
-            const noticeResDtos = await NoticeService.getAllNotices(page, limit);
+            const pagination = new Pagination(req.query.page, req.query.limit);
+            const noticeResDtos = await NoticeService.getAllNotices(pagination);
             res.status(200).json(noticeResDtos);
         } catch (error) {
             next(error);
@@ -26,12 +26,10 @@ class NoticeController {
 
     static async searchNotices(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
-            const query = req.query.query; 
-            const searchBy = req.query.searchBy || 'all';
+            const pagination = new Pagination(req.query.page, req.query.limit);
+            const searchParams = new SearchParameters(req.query.query, req.query.searchBy);
 
-            const noticeResDtos = await NoticeService.searchNotices(query, page, limit, searchBy);
+            const noticeResDtos = await NoticeService.searchNotices(pagination, searchParams);
             res.status(200).json(noticeResDtos);
         } catch (error) {
             next(error);
