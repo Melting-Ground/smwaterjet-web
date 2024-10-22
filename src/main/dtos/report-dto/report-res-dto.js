@@ -4,7 +4,6 @@ class ReportResponseDto {
         this.username = report.username;
         this.title = report.title;
         this.content = report.content;
-        this.year = report.year;
         this.files = Array.isArray(files) ? files : [];
         this.uploaded_at = report.uploaded_at;
     }

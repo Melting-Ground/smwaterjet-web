@@ -9,7 +9,7 @@ const createSearchQuery = (tableName, searchParams) => {
 		return searchQuery;
 	}
 	if (searchBy === 'username') {
-		searchQuery = searchQuery.where('author', 'like', `%${query}%`);
+		searchQuery = searchQuery.where('username', 'like', `%${query}%`);
 		return searchQuery;
 	}
 	if (searchBy === 'content') {

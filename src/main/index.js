@@ -3,7 +3,6 @@ require('module-alias/register');
 const cors = require('cors');
 const exceptionHandler = require('@middlewares/exception-handler');
 
-
 const express = require('express');
 const adminRoutes = require('@routes/admin-routes');
 const certificateRoutes = require('@routes/certificate-routes');

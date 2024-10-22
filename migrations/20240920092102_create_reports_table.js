@@ -8,7 +8,6 @@ exports.up = function(knex) {
         table.string('username').notNullable();
         table.string('title').notNullable();
         table.text('content').notNullable();
-        table.integer('year').notNullable(); 
         table.timestamp('uploaded_at').defaultTo(knex.fn.now());
     });
 };

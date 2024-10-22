@@ -1,9 +1,8 @@
 class Report {
-  constructor({ username, title, content, year }) {
+  constructor({ username, title, content }) {
     this.username = username;
     this.title = title;
     this.content = content;
-    this.year = year;
   }
 }
 

@@ -1,7 +1,6 @@
 const NewsDto = require("@dtos/news-dto/news-dto");
 const NewsService = require('@services/news-service');
 const Pagination = require('@utils/pagination');
-const SearchParameters = require('@utils/search-parameters');
 
 class NewsController {
     static async getAllNews(req, res, next) {
