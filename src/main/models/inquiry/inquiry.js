@@ -1,6 +1,6 @@
 class Inquiry {
-    constructor({username, password, phone_number, email, title, content}) {
-        this.username = username;
+    constructor({author, password, phone_number, email, title, content}) {
+        this.author = author;
         this.password = password;
         this.phone_number = phone_number;
         this.email = email;

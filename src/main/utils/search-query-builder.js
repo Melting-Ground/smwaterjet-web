@@ -8,8 +8,8 @@ const createSearchQuery = (tableName, searchParams) => {
 		searchQuery = searchQuery.where('title', 'like', `%${query}%`);
 		return searchQuery;
 	}
-	if (searchBy === 'username') {
-		searchQuery = searchQuery.where('username', 'like', `%${query}%`);
+	if (searchBy === 'author') {
+		searchQuery = searchQuery.where('author', 'like', `%${query}%`);
 		return searchQuery;
 	}
 	if (searchBy === 'content') {
@@ -18,7 +18,7 @@ const createSearchQuery = (tableName, searchParams) => {
 	}
 	searchQuery = searchQuery.where(function () {
 		this.where('title', 'like', `%${query}%`)
-			.orWhere('username', 'like', `%${query}%`)
+			.orWhere('author', 'like', `%${query}%`)
 			.orWhere('content', 'like', `%${query}%`);
 	});
 	return searchQuery;

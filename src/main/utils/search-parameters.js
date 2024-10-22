@@ -1,5 +1,5 @@
 class SearchParameters {
-	static validOptions = ['title', 'username', 'content', 'all'];
+	static validOptions = ['title', 'author', 'content', 'all'];
 
     constructor(query, searchBy) {
         this.query = query || '';  
