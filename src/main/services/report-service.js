@@ -6,8 +6,10 @@ const fileDeleteUtil = require('@utils/file-delete-util');
 const createSearchQuery = require('@utils/search-query-builder');
 
 class ReportService {
-    static async getAllReports(page, limit) {
-        const offset = (page - 1) * limit;
+    static async getAllReports(pagination) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
+
         const reports = await db('reports').limit(limit).offset(offset);
         const reportResDtos = reports.map(report => new ReportResDto(report));
         return reportResDtos;
@@ -23,16 +25,17 @@ class ReportService {
         return reportResDto;
     }
 
-    static async searchReports(query, page, limit, searchBy = 'all') {
-        const offset = (page - 1) * limit;
+    static async searchReports(pagination, searchParams) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
 
-        let reportsQuery = createSearchQuery('reports', query, searchBy)
+        let reportsQuery = createSearchQuery('reports', searchParams);
         const reports = await reportsQuery.limit(limit).offset(offset);
         const reportResDtos = reports.map(report => new ReportResDto(report));
 
         return reportResDtos;
     }
-    
+
     static async editReport(id, reportDto, reportFileDto) {
         const report = await db('reports').where({ id }).first();
         const filePaths = reportFileDto.paths.map(file => file.path);

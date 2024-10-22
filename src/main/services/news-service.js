@@ -4,8 +4,10 @@ const News = require("@models/news");
 const Exception = require('@exceptions/exceptions');
 
 class NewsService {
-    static async getAllNews(page, limit) {
-        const offset = (page - 1) * limit;
+    static async getAllNews(pagination) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
+
         const news = await db('news').limit(limit).offset(offset);
         const newsResDtos = news.map(news => new NewsResDto(news));
         return newsResDtos;
@@ -13,9 +15,7 @@ class NewsService {
 
     static async createNews(newsDto) {
         const newNews = new News(newsDto);
-
         await db('news').insert(newNews);
-
         return new NewsResDto(newNews);
     }
 
@@ -24,7 +24,6 @@ class NewsService {
         if (news == null) {
             throw new Exception('ValueNotFoundException', 'News is not found');
         }
-
         const updateNews = new News(newsDto);
 
         await db('news').where({ id }).update(updateNews);

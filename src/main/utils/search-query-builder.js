@@ -1,7 +1,8 @@
 const db = require('@configs/knex');
 
-const createSearchQuery = (tableName, query, searchBy) => {
+const createSearchQuery = (tableName, searchParams) => {
 	let searchQuery = db(tableName);
+    const { searchBy, query } = searchParams;
 
 	if (searchBy === 'title') {
 		searchQuery = searchQuery.where('title', 'like', `%${query}%`);
