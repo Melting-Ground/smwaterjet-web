@@ -7,9 +7,7 @@ const loginAdmin = async (adminDto) => {
     const admin = await db('admins')
         .where({ phone_number: adminDto.phoneNumber })
         .first();
-
-    console.log(admin);
-
+        
     if (admin == null) {
         throw new Exception('ValueNotFoundException', 'Admin is not found');
     }

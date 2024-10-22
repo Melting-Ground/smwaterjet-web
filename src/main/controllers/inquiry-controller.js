@@ -1,14 +1,14 @@
 const InquiryDto = require('@dtos/inquiry-dto/inquiry-dto');
 const InquiryFileDto = require('@dtos/inquiry-dto/inquiry-file-dto');
 const InquiryService = require('@services/inquiry-service');
+const Pagination = require('@utils/pagination');
 
 class InquiryController {
     static async getAllInquiries(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
+            const pagination = new Pagination(req.query.page, req.query.limit);
 
-            const inquiryResDtos = await InquiryService.getAllInquiries(page, limit);
+            const inquiryResDtos = await InquiryService.getAllInquiries(pagination);
             res.status(200).json(inquiryResDtos);
         } catch (error) {
             next(error);
@@ -27,12 +27,12 @@ class InquiryController {
 
     static async searchInquiries(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
+            const pagination = new Pagination(req.query.page, req.query.limit);
+
             const query = req.query.query; 
             const searchBy = req.query.searchBy || 'all';
 
-            const inquiryResDtos = await InquiryService.searchInquiries(query, page, limit, searchBy);
+            const inquiryResDtos = await InquiryService.searchInquiries( pagination, query, searchBy);
             res.status(200).json(inquiryResDtos);
         } catch (error) {
             next(error);
