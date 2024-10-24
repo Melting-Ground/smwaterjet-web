@@ -3,6 +3,7 @@ const ReportResDto = require('@dtos/report-dto/report-res-dto');
 const ReportService = require('@services/report-service');
 const ReportFileDto = require('@dtos/report-dto/report-file-dto');
 const fileDeleteUtil = require('@utils/file-delete-util');
+const Pagination = require('@utils/pagination');
 
 jest.mock('@utils/file-delete-util');
 jest.mock('@configs/knex');
@@ -22,8 +23,8 @@ describe('ReportService', () => {
                 limit: jest.fn().mockReturnThis(),
                 offset: jest.fn().mockResolvedValue(mockReports),
             }));
-
-            const result = await ReportService.getAllReports(1, 10);
+            const paigination = new Pagination(1,10);
+            const result = await ReportService.getAllReports(paigination);
             expect(result).toHaveLength(mockReports.length);
             expect(result[0]).toBeInstanceOf(ReportResDto);
         });

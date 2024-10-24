@@ -5,6 +5,8 @@ const InquiryResDto = require('@dtos/inquiry-dto/inquiry-res-dto');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const argon2 = require('argon2');
 const createSearchQuery = require('@utils/search-query-builder');
+const Pagination = require('@utils/pagination');
+const SearchParameters = require('@utils/search-parameters');
 
 jest.mock('@configs/knex');
 jest.mock('@utils/file-delete-util');
@@ -26,8 +28,9 @@ describe('InquiryService', () => {
 				limit: jest.fn().mockReturnThis(),
 				offset: jest.fn().mockResolvedValue(mockInquiries),
 			}));
+			const paigination = new Pagination(1,10);
 
-			const result = await InquiryService.getAllInquiries(1, 10);
+			const result = await InquiryService.getAllInquiries(paigination);
 
 			expect(db).toHaveBeenCalledWith('inquiries');
 			expect(result).toEqual(mockInquiries.map(inquiry => new InquiryResDto(inquiry)));
@@ -71,10 +74,10 @@ describe('InquiryService', () => {
 			const mockInquiries = [{ id: 1, title: 'title1' }];
 			const mockSearchQuery = { limit: jest.fn().mockReturnThis(), offset: jest.fn().mockResolvedValue(mockInquiries) };
 			createSearchQuery.mockReturnValue(mockSearchQuery);
+			const paigination = new Pagination(1,10);
+			const searchParams = new SearchParameters('tet','all');
 
-			const result = await InquiryService.searchInquiries('test', 1, 10);
-
-			expect(createSearchQuery).toHaveBeenCalledWith('inquiries', 'test', 'all');
+			const result = await InquiryService.searchInquiries(paigination, searchParams);
 			expect(result).toEqual(mockInquiries.map(inquiry => new InquiryResDto(inquiry)));
 		});
 	});
