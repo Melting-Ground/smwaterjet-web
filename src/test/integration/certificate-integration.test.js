@@ -42,7 +42,7 @@ describe('CertificateController Integration Tests', () => {
             expect(res.body).toEqual(mockData);
         });
 
-        it('없을 경우 오류', async () => {
+        it('id의 특허정보가 없을 경우 오류', async () => {
             CertificateService.getCertificateById.mockRejectedValue(new Error('Certificate not found'));
 
             const res = await request(app).get('/certificates/999');

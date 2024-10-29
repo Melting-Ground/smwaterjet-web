@@ -1,5 +1,5 @@
 const db = require('@configs/knex');
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 const jwtTokenProvider = require('@jwt/jwt-token-provider');
 const argon2 = require('argon2');
 

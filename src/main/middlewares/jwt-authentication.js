@@ -1,6 +1,6 @@
 const AuthorizationHeader = require('@jwt/authorization-header');
 const tokenVerifier = require('@jwt/jwt-token-provider');
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 
 const authenticate = async (req, res, next) => {
     try {

@@ -58,7 +58,7 @@ class InquiryController {
             const inquiryResDto = await InquiryService.editInquiry(inquiryId, inquiryDto, inquiryFileDto);
 
             res.status(200).json(inquiryResDto);
-        } catch {
+        } catch(error) {
             next(error);
         }
     }

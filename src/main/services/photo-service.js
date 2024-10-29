@@ -2,7 +2,7 @@ const db = require('@configs/knex');
 const Photo = require("@models/photo");
 const PhotoResDto = require("@dtos/photo-dto/photo-res-dto");
 const fileDeleteUtil = require('@utils/file-delete-util');
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 
 class PhotoService {
     static async getAllPhotos() {

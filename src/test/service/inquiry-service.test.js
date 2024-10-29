@@ -1,6 +1,5 @@
 const db = require('@configs/knex');
 const InquiryService = require('@services/inquiry-service');
-const Inquiry = require('@models/inquiry/inquiry');
 const InquiryResDto = require('@dtos/inquiry-dto/inquiry-res-dto');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const argon2 = require('argon2');

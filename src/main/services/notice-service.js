@@ -1,7 +1,7 @@
 const db = require('@configs/knex');
 const NoticeResDto = require('@dtos/notice-dto/notice-res-dto');
 const Notice = require('@models/notice/notice');
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const createSearchQuery = require('@utils/search-query-builder');
 

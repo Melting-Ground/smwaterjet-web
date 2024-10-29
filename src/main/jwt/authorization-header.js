@@ -1,4 +1,4 @@
-const Exception = require("../exceptions/exceptions");
+const Exception = require("../exceptions/exception");
 
 class AuthorizationHeader {
     constructor(authHeader) {

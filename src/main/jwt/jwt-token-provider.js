@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const Exception = require('../exceptions/exceptions');
+const Exception = require('../exceptions/exception');
 
 const secretKey = process.env.JWT_SECRETKEY;
 

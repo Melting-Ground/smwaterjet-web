@@ -1,7 +1,7 @@
 const db = require('@configs/knex');
 const NewsResDto = require("@dtos/news-dto/news-res-dto");
 const News = require("@models/news");
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 
 class NewsService {
     static async getAllNews(pagination) {
