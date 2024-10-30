@@ -55,9 +55,7 @@ describe('InquiryController Integration Tests', () => {
             const mockData = { id: 1, title: 'New Inquiry' };
             InquiryService.createInquiry.mockResolvedValue(mockData);
 
-            const res = await request(app)
-                .post('/inquiries')
-                .send({ title: 'New Inquiry' });
+            const res = await request(app).post('/inquiries').send({ title: 'New Inquiry' });
 
             expect(res.statusCode).toBe(201);
             expect(res.body).toEqual(mockData);
@@ -66,9 +64,7 @@ describe('InquiryController Integration Tests', () => {
         it('질의사항 생성 중 오류 발생 시 처리', async () => {
             InquiryService.createInquiry.mockRejectedValue(new Error('Error creating inquiry'));
 
-            const res = await request(app)
-                .post('/inquiries')
-                .send({ title: 'New Inquiry' });
+            const res = await request(app).post('/inquiries').send({ title: 'New Inquiry' });
 
             expect(res.statusCode).toBe(500);
         });
@@ -79,9 +75,7 @@ describe('InquiryController Integration Tests', () => {
             const mockData = { id: 1, title: 'Updated Inquiry' };
             InquiryService.editInquiry.mockResolvedValue(mockData);
 
-            const res = await request(app)
-                .put('/inquiries/1')
-                .send({ title: 'Updated Inquiry' }); 
+            const res = await request(app).put('/inquiries/1').send({ title: 'Updated Inquiry' });
 
             expect(res.statusCode).toBe(200);
             expect(res.body).toEqual(mockData);

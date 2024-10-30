@@ -57,7 +57,7 @@ class NoticeController {
             const noticeResDto = await NoticeService.editNotice(noticeId, noticeDto, noticeFileDto);
 
             res.status(200).json(noticeResDto);
-        } catch {
+        } catch(error) {
             next(error);
         }
     }

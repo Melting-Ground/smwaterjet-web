@@ -30,10 +30,10 @@ class NewsController {
             const { newsId } = req.params;
             const newsDto = new NewsDto(req.body);
 
-            const newsResDto = await NewsService.editNotice(newsId, newsDto);
+            const newsResDto = await NewsService.editNews(newsId, newsDto);
 
             res.status(200).json(newsResDto);
-        } catch {
+        } catch(error) {
             next(error);
         }
     }
