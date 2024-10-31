@@ -43,7 +43,7 @@ class ReportController {
             const reportDto = new ReportDto(req.body);
             const reportFileDto = new ReportFileDto(req.files);
 
-            const reportResDto = await NoticeService.editReport(reportId, reportDto, reportFileDto);
+            const reportResDto = await ReportService.editReport(reportId, reportDto, reportFileDto);
 
             res.status(200).json(reportResDto);
         } catch (error) {
