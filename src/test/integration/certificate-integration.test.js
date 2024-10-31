@@ -51,7 +51,7 @@ describe('CertificateController Integration Tests', () => {
     });
 
 	describe('POST /certificates', () => {
-		it('새로운 특허 등록 및 201 리턴', async () => {
+		it('새로운 특허 등록', async () => {
 			const mockData = { id: 1, path: 'path/to/file1.pdf' };
 			CertificateService.createCertificate.mockResolvedValue(mockData);
 	

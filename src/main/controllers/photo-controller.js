@@ -47,9 +47,7 @@ class PhotoController {
         try {
             const filePath = req.file.path;
             const photoDto = new PhotoDto({
-                title: req.body.title,
-                content: req.body.content,
-                year: req.body.year,
+                ...req.body,
                 path: filePath
             });
 

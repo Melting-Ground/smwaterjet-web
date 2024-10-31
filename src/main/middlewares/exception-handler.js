@@ -10,6 +10,10 @@ const exceptionHandler = (err, req, res, next) => {
         return res.status(404).json({ message: err.message });
     }
 
+    if (err.name === 'BadRequestException') {
+        return res.status(400).json({ message: err.message });
+    }
+
     if (err.name === 'ValueAlreadyExistsException') {
         return res.status(409).json({ message: err.message });
     }
