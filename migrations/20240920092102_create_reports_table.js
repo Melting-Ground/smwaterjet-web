@@ -5,10 +5,9 @@
 exports.up = function(knex) {
     return knex.schema.createTable('reports', function(table) {
         table.increments('id').primary();
-        table.string('username').notNullable();
+        table.string('author').notNullable();
         table.string('title').notNullable();
         table.text('content').notNullable();
-        table.integer('year').notNullable(); 
         table.timestamp('uploaded_at').defaultTo(knex.fn.now());
     });
 };

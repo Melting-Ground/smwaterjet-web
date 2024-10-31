@@ -1,6 +1,6 @@
 const db = require('@configs/knex');
 const argon2 = require('argon2');
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 
 const userAuthenticate = async (req, res, next) => {
     try {

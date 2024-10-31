@@ -1,5 +1,5 @@
 const db = require('@configs/knex');
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 const jwtTokenProvider = require('@jwt/jwt-token-provider');
 const argon2 = require('argon2');
 
@@ -8,10 +8,8 @@ const loginAdmin = async (adminDto) => {
         .where({ phone_number: adminDto.phoneNumber })
         .first();
 
-    console.log(admin);
-
     if (admin == null) {
-        throw new Exception('ValueNotFoundException', 'Admin is not found');
+        throw new Exception('AuthenticationException', 'Admin is not found');
     }
 
     const passwordValid = await argon2.verify(admin.password_hash, adminDto.password);

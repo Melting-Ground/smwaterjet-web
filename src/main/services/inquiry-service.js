@@ -1,14 +1,16 @@
 const db = require('@configs/knex');
 const Inquiry = require("@models/inquiry/inquiry");
 const InquiryResDto = require("@dtos/inquiry-dto/inquiry-res-dto");
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const argon2 = require('argon2');
 const createSearchQuery = require('@utils/search-query-builder');
 
 class InquiryService {
-    static async getAllInquiries(page, limit) {
-        const offset = (page - 1) * limit;
+    static async getAllInquiries(pagination) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
+
         const inquiries = await db('inquiries').limit(limit).offset(offset);
         const inquiryResDtos = inquiries.map(inquiry => new InquiryResDto(inquiry));
         return inquiryResDtos;
@@ -24,10 +26,11 @@ class InquiryService {
         return new InquiryResDto(inquiry, inquiryFiles);
     }
 
-    static async searchInquiries(query, page, limit, searchBy = 'all') {
-        const offset = (page - 1) * limit;
+    static async searchInquiries(pagination, searchParams) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
 
-        let inquiriesQuery = createSearchQuery('inquiries', query, searchBy)
+        let inquiriesQuery = createSearchQuery('inquiries', searchParams);
         const inquiries = await inquiriesQuery.limit(limit).offset(offset);
         const inquiryResDtos = inquiries.map(inquiry => new InquiryResDto(inquiry));
 
@@ -43,7 +46,7 @@ class InquiryService {
         });
 
         const [insertedId] = await db('inquiries').insert(newInquiry);
-                
+
         if (inquiryFileDto.isNotEmpty()) {
             const fileInsertPromises = filePaths.map(async (path) => {
                 return await db('inquiry_files').insert({
@@ -61,7 +64,7 @@ class InquiryService {
         if (inquiry == null) {
             throw new Exception('ValueNotFoundException', 'Inquiry is not found');
         }
-        
+
         const filePaths = inquiryFileDto.paths.map(file => file.path);
 
         const updateInquiry = new Inquiry(inquiryDto);

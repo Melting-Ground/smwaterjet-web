@@ -1,6 +1,6 @@
 class NoticeDto {
-    constructor({username, title, content}) {
-        this.username = username;
+    constructor({author, title, content}) {
+        this.author = author;
         this.title = title;
         this.content = content;
     }

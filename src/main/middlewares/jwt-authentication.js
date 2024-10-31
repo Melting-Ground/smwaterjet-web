@@ -1,10 +1,10 @@
 const AuthorizationHeader = require('@jwt/authorization-header');
 const tokenVerifier = require('@jwt/jwt-token-provider');
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 
 const authenticate = async (req, res, next) => {
     try {
-        const authHeaderValue = req.body.headers && req.body.headers['Authorization'];
+        const authHeaderValue = req.headers['authorization'];
 
         if (authHeaderValue == null) {
             throw new Exception('AuthenticationException', 'Authorization header is missing');

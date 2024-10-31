@@ -1,7 +1,6 @@
 const CertificateDto = require('@dtos/certificate-dto/certificate-dto');
 const CertificateService = require('@services/certificate-service');
 
-
 class CertificateController {
     static async getAllCertificates(req, res, next) {
         try {

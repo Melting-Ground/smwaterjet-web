@@ -1,13 +1,14 @@
 const db = require('@configs/knex');
 
-const createSearchQuery = (tableName, query, searchBy) => {
+const createSearchQuery = (tableName, searchParams) => {
 	let searchQuery = db(tableName);
+    const { searchBy, query } = searchParams;
 
 	if (searchBy === 'title') {
 		searchQuery = searchQuery.where('title', 'like', `%${query}%`);
 		return searchQuery;
 	}
-	if (searchBy === 'username') {
+	if (searchBy === 'author') {
 		searchQuery = searchQuery.where('author', 'like', `%${query}%`);
 		return searchQuery;
 	}
@@ -17,7 +18,7 @@ const createSearchQuery = (tableName, query, searchBy) => {
 	}
 	searchQuery = searchQuery.where(function () {
 		this.where('title', 'like', `%${query}%`)
-			.orWhere('username', 'like', `%${query}%`)
+			.orWhere('author', 'like', `%${query}%`)
 			.orWhere('content', 'like', `%${query}%`);
 	});
 	return searchQuery;

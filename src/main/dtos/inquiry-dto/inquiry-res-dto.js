@@ -1,7 +1,7 @@
 class InquiryResponseDto {
     constructor(inquiry, files = []) {
         this.id = inquiry.id;
-        this.username = inquiry.username;
+        this.author = inquiry.author;
         this.phone_number = inquiry.phone_number;
         this.email = inquiry.email;
         this.title = inquiry.title;

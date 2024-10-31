@@ -1,13 +1,15 @@
 const db = require('@configs/knex');
 const NoticeResDto = require('@dtos/notice-dto/notice-res-dto');
 const Notice = require('@models/notice/notice');
-const Exception = require('@exceptions/exceptions');
+const Exception = require('@exceptions/exception');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const createSearchQuery = require('@utils/search-query-builder');
 
 class NoticeService {
-    static async getAllNotices(page, limit) {
-        const offset = (page - 1) * limit;
+    static async getAllNotices(pagination) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
+
         const notices = await db('notices').limit(limit).offset(offset);
         const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
         return noticeResDtos;
@@ -23,10 +25,11 @@ class NoticeService {
         return new NoticeResDto(notice, noticeFiles);
     }
 
-    static async searchNotices(query, page, limit, searchBy = 'all') {
-        const offset = (page - 1) * limit;
+    static async searchNotices(pagination, searchParams) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
 
-        let noticesQuery = createSearchQuery('notices', query, searchBy)
+        let noticesQuery = createSearchQuery('notices', searchParams);
         const notices = await noticesQuery.limit(limit).offset(offset);
         const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
 

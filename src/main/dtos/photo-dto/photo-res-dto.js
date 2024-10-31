@@ -1,11 +1,11 @@
 class PhotoResponseDto {
-    constructor(photo) {
-        this.id = photo.id;
-        this.title = photo.title;
-        this.content = photo.content;
-        this.year = photo.year;
-        this.path = photo.path;
-        this.uploaded_at = photo.uploaded_at;
+    constructor({id, title , content, year, path, uploaded_at}) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.year = year;
+        this.path = path;
+        this.uploaded_at = uploaded_at;
     }
 }
 

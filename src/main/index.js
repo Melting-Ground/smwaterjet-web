@@ -1,7 +1,7 @@
 require('dotenv').config();
 require('module-alias/register');
+const cors = require('cors');
 const exceptionHandler = require('@middlewares/exception-handler');
-
 
 const express = require('express');
 const adminRoutes = require('@routes/admin-routes');
@@ -13,6 +13,7 @@ const noticeRoutes = require('@routes/notice-routes');
 const newsRoutes = require('@routes/news-routes');
 
 const app = express();
+app.use(cors());
 
 app.set('port', process.env.PORT || 3000);
 
