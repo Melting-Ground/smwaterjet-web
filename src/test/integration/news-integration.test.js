@@ -14,6 +14,10 @@ app.delete('/news/:newsId', NewsController.deleteNews);
 jest.mock('@services/news-service');
 
 describe('NewsController Integration Tests', () => {
+	afterEach(() => {
+        jest.clearAllMocks();
+    });
+	
 	describe('GET /news', () => {
 		it('전체 뉴스 목록 조회', async () => {
 			const mockNewsList = [
@@ -58,7 +62,7 @@ describe('NewsController Integration Tests', () => {
 		it('업데이트 과정에서 오류 발생 시 처리', async () => {
 			NewsService.editNews.mockRejectedValue(new Error('Error updating news'));
 
-			const res = await request(app).put(`/news/999}`).send({});
+			const res = await request(app).put(`/news/999`).send({});
 			expect(res.statusCode).toBe(500);
 		});
 	});
@@ -75,7 +79,7 @@ describe('NewsController Integration Tests', () => {
 		it('삭제 과정에서 오류 발생 시 처리', async () => {
 			NewsService.deleteNews.mockRejectedValue(new Error('Error deleting news'));
 
-			const res = await request(app).delete(`/news/999}`);
+			const res = await request(app).delete(`/news/999`);
 			expect(res.statusCode).toBe(500);
 		});
 	});
