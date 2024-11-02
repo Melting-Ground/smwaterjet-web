@@ -1,9 +1,11 @@
 require('dotenv').config();
 require('module-alias/register');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const exceptionHandler = require('@middlewares/exception-handler');
 
 const express = require('express');
+const setClientIP = require('@middlewares/client-ip');
 const adminRoutes = require('@routes/admin-routes');
 const certificateRoutes = require('@routes/certificate-routes');
 const photoRoutes = require('@routes/photo-routes');
@@ -13,11 +15,14 @@ const noticeRoutes = require('@routes/notice-routes');
 const newsRoutes = require('@routes/news-routes');
 
 const app = express();
+app.use(cookieParser());
 app.use(cors());
 
 app.set('port', process.env.PORT || 3000);
 
 app.use(express.json());
+
+app.use(setClientIP);
 
 app.use('/admins', adminRoutes);
 app.use('/company', certificateRoutes);

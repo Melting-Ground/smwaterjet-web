@@ -5,6 +5,7 @@ class NoticeResponseDto {
         this.title = notice.title;
         this.content = notice.content;
         this.files = Array.isArray(files) ? files : [];
+        this.count = notice.count;
         this.created_at = notice.created_at;
     }
 }

@@ -8,6 +8,7 @@ exports.up = function(knex) {
         table.string('author').notNullable();
         table.string('title').notNullable(); 
         table.text('content').notNullable();
+        table.integer('count').defaultTo(0).notNullable();
         table.timestamp('created_at').defaultTo(knex.fn.now()); 
     });
 };
