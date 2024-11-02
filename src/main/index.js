@@ -23,6 +23,9 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.json());
 
 app.use(setClientIP);
+const path = require('path');
+const uploadsPath = path.join(__dirname, '../../public');
+app.use('/public', express.static(uploadsPath));
 
 app.use('/admins', adminRoutes);
 app.use('/company', certificateRoutes);
