@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const createMulter = (category) => {
   const storage = multer.diskStorage({
     destination: async function (req, file, cb) {
-      const uploadPath = `uploads/${category}/`;
+      const uploadPath = `public/${category}/`;
       try {
         await fs.mkdir(uploadPath, { recursive: true });
         cb(null, uploadPath);
