@@ -12,9 +12,9 @@ router.get('/', InquiryController.getAllInquiries);
 router.get('/search', InquiryController.searchInquiries);
 router.get('/:inquiryId', InquiryController.getInquiryById);
 
-router.post('/', upload.array('files', 10), InquiryController.createInquiry);
+router.post('/', upload.array('files', 5), InquiryController.createInquiry);
 
-router.put('/:inquiryId', userAuthenticate, upload.array('newFiles', 10), InquiryController.editInquiry);
+router.put('/:inquiryId', userAuthenticate, upload.array('newFiles', 5), InquiryController.editInquiry);
 
 router.delete('/admin/:inquiryId', authenticate, InquiryController.deleteInquiry);
 router.delete('/files/:inquiryFileId', InquiryController.deleteFile);

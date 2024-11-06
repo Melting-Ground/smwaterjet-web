@@ -11,9 +11,9 @@ router.get('/', ReportController.getAllReports);
 router.get('/search', ReportController.searchReports);
 router.get('/:reportId', ReportController.getReportById);
 
-router.put('/:reportId', authenticate, upload.array('newFiles', 10), ReportController.editReport);
+router.put('/:reportId', authenticate, upload.array('newFiles', 5), ReportController.editReport);
 
-router.post('/', authenticate, upload.array('files', 10), ReportController.createReport);
+router.post('/', authenticate, upload.array('files', 5), ReportController.createReport);
 
 router.delete('/file/reportFileId', authenticate, ReportController.deleteFile);
 router.delete('/:reportId', authenticate, ReportController.deleteReport);
