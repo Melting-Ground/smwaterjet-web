@@ -1,7 +1,6 @@
 class Photo {
-    constructor({ title, content, year, path }) {
+    constructor({ title, year, path }) {
         this.title = title;
-        this.content = content;
         this.year = year;
         this.path = path;
     }
