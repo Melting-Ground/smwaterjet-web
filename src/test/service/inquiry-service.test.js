@@ -1,6 +1,7 @@
 const db = require('@configs/knex');
 const InquiryService = require('@services/inquiry-service');
 const InquiryResDto = require('@dtos/inquiry-dto/inquiry-res-dto');
+const InquiryPublicResDto = require('@dtos/inquiry-dto/inquiry-public-res-dto');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const argon2 = require('argon2');
 const createSearchQuery = require('@utils/search-query-builder');
@@ -32,7 +33,7 @@ describe('InquiryService', () => {
 			const result = await InquiryService.getAllInquiries(paigination);
 
 			expect(db).toHaveBeenCalledWith('inquiries');
-			expect(result).toEqual(mockInquiries.map(inquiry => new InquiryResDto(inquiry)));
+			expect(result).toEqual(mockInquiries.map(inquiry => new InquiryPublicResDto(inquiry)));
 		});
 	});
 
@@ -77,7 +78,7 @@ describe('InquiryService', () => {
 			const searchParams = new SearchParameters('tet','all');
 
 			const result = await InquiryService.searchInquiries(paigination, searchParams);
-			expect(result).toEqual(mockInquiries.map(inquiry => new InquiryResDto(inquiry)));
+			expect(result).toEqual(mockInquiries.map(inquiry => new InquiryPublicResDto(inquiry)));
 		});
 	});
 
