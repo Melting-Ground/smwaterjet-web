@@ -16,7 +16,6 @@ const userAuthenticate = async (req, res, next) => {
         if (!isPasswordValid) {
             throw new Exception('AuthenticationException', 'Invalid password');
         }
-
         next();
     } catch (error) {
         next(error);
