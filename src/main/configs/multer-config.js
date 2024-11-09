@@ -16,9 +16,7 @@ const createMulter = (category) => {
 
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now();
-      const originalName = path.basename(file.originalname, path.extname(file.originalname));
-      const ext = path.extname(file.originalname);
-      cb(null, `${uniqueSuffix}-${originalName}${ext}`);
+      cb(null, `${uniqueSuffix}-${file.originalname}`);
     }
   });
   return multer({ storage: storage });

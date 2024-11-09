@@ -11,7 +11,7 @@ router.get('/certificates', CertificateController.getAllCertificates);
 
 router.get('/certificates/:certificateId', CertificateController.getCertificateById);
 
-router.post('/certificates', upload.single('file'), CertificateController.createCertificate);
+router.post('/certificates', authenticate, upload.single('file'), CertificateController.createCertificate);
 
 router.delete('/certificates/:certificateId', authenticate, CertificateController.deleteCertificate);
 
