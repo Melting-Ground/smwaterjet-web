@@ -16,6 +16,7 @@ const createMulter = (category) => {
 
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now();
+      file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8')
       cb(null, `${uniqueSuffix}-${file.originalname}`);
     }
   });
