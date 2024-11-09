@@ -14,8 +14,8 @@ describe('PhotoService', () => {
     describe('getAllPhotos', () => {
         it('전체 작업 사진 조회', async () => {
             const mockPhotos = [
-                { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' },
-                { id: 2, title: 'title2', content: 'content2', year: 2024, path: 'path1' },
+                { id: 1, title: 'title1', year: 2024, path: 'path1' },
+                { id: 2, title: 'title2', year: 2024, path: 'path1' },
             ];
             db.mockResolvedValue(mockPhotos);
 
@@ -28,7 +28,7 @@ describe('PhotoService', () => {
 
     describe('getPhotoById', () => {
         it('id로 사진 조회', async () => {
-            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
+            const mockPhoto = { id: 1, title: 'title1', year: 2024, path: 'path1' };
 
             db.mockImplementation(() => ({
                 where: jest.fn().mockReturnThis(),
@@ -53,8 +53,8 @@ describe('PhotoService', () => {
 
     describe('createPhoto', () => {
         it('새로운 사진 생성', async () => {
-            const mockPhotoDto = { title: 'title1', content: 'content1', year: 2024, path: 'path1' };
-            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
+            const mockPhotoDto = { title: 'title1', year: 2024, path: 'path1' };
+            const mockPhoto = { id: 1, title: 'title1', year: 2024, path: 'path1' };
 
             db.mockImplementation(() => ({
                 insert: jest.fn().mockResolvedValue([mockPhoto.id])
@@ -67,7 +67,7 @@ describe('PhotoService', () => {
     });
     describe('deletePhoto', () => {
         it('id로 등록된 사진 삭제', async () => {
-            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
+            const mockPhoto = { id: 1, title: 'title1', year: 2024, path: 'path1' };
             db.mockImplementation(() => ({
                 where: jest.fn().mockReturnThis(),
                 first: jest.fn().mockResolvedValue(mockPhoto),
@@ -80,7 +80,7 @@ describe('PhotoService', () => {
         });
 
         it('id의 사진이 없을 경우 예외 처리', async () => {
-            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
+            const mockPhoto = { id: 1, title: 'title1', year: 2024, path: 'path1' };
 
             db.mockImplementation(() => ({
                 where: jest.fn().mockReturnThis(),
@@ -91,7 +91,7 @@ describe('PhotoService', () => {
         });
 
         it('사진 삭제가 실패한 경우 예외 처리', async () => {
-            const mockPhoto = { id: 1, title: 'title1', content: 'content1', year: 2024, path: 'path1' };
+            const mockPhoto = { id: 1, title: 'title1', year: 2024, path: 'path1' };
 
             db.mockImplementation(() => ({
                 where: jest.fn().mockReturnThis(),

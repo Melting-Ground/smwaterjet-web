@@ -1,6 +1,7 @@
 const db = require('@configs/knex');
 const Inquiry = require("@models/inquiry/inquiry");
 const InquiryResDto = require("@dtos/inquiry-dto/inquiry-res-dto");
+const InquiryPublicResDto = require("@dtos/inquiry-dto/inquiry-public-res-dto");
 const Exception = require('@exceptions/exception');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const argon2 = require('argon2');
@@ -12,8 +13,8 @@ class InquiryService {
         const limit = pagination.limit;
 
         const inquiries = await db('inquiries').limit(limit).offset(offset);
-        const inquiryResDtos = inquiries.map(inquiry => new InquiryResDto(inquiry));
-        return inquiryResDtos;
+        const inquiryPublicResDtos = inquiries.map(inquiry => new InquiryPublicResDto(inquiry));
+        return inquiryPublicResDtos;
     }
 
     static async getInquiryById(id) {
@@ -32,9 +33,9 @@ class InquiryService {
 
         let inquiriesQuery = createSearchQuery('inquiries', searchParams);
         const inquiries = await inquiriesQuery.limit(limit).offset(offset);
-        const inquiryResDtos = inquiries.map(inquiry => new InquiryResDto(inquiry));
+        const inquiryPublicResDtos = inquiries.map(inquiry => new InquiryPublicResDto(inquiry));
 
-        return inquiryResDtos;
+        return inquiryPublicResDtos;
     }
 
     static async createInquiry(inquiryDto, inquiryFileDto) {

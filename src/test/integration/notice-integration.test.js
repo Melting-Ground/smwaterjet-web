@@ -57,8 +57,7 @@ describe('NoticeController Integration Tests', () => {
         it('ID로 공지 조회', async () => {
             const mockNotice = { id: 1, title: 'title1', content: 'content1' };
             NoticeService.getNoticeById.mockResolvedValue(mockNotice);
-
-            const res = await request(app).get('/notices/1');
+			const res = await request(app).get('/notices/1');
             expect(res.statusCode).toBe(200);
             expect(res.body).toEqual(mockNotice);
         });
