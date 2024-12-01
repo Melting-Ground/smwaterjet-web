@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 app.get('/reports', ReportController.getAllReports);
-app.get('/reports/search', ReportController.searchReports);
+app.get('/reports/year/:year', ReportController.getReportByYear);
 app.get('/reports/:reportId', ReportController.getReportById);
 app.post('/reports', ReportController.createReport);
 app.put('/reports/:reportId', ReportController.editReport);
@@ -23,8 +23,8 @@ describe('ReportController Integration Tests', () => {
 	describe('GET /reports', () => {
 		it('전체 실적현황 목록 조회', async () => {
 			const mockReports = [
-				{ id: 1, title: 'title1', content: 'content1' },
-				{ id: 2, title: 'title2', content: 'content2' },
+				{ id: 1, title: 'title1', year: 2024, start_date: '2024-11-11', end_date: '2024-12-12'},
+				{ id: 2, title: 'title2', year: 2024, start_date: '2024-11-11', end_date: '2024-12-12'},
 			];
 			ReportService.getAllReports.mockResolvedValue(mockReports);
 
@@ -34,29 +34,22 @@ describe('ReportController Integration Tests', () => {
 		});
 	});
 
-	describe('GET /reports/search', () => {
+	describe('GET /reports/year/:year', () => {
 		it('실적현황 검색 결과 반환', async () => {
 			const mockSearchResults = [
-				{ id: 1, title: 'Report for query', content: 'content1' },
+				{ id: 1, title: 'title1', year: 2024, start_date: '2024-11-11', end_date: '2024-12-12'}
 			];
-			ReportService.searchReports.mockResolvedValue(mockSearchResults);
+			ReportService.getReportByYear.mockResolvedValue(mockSearchResults);
 
-			const res = await request(app).get('/reports/search').query({ query: 'query', searchBy: 'title' });
+			const res = await request(app).get('/reports/year/2024');
 			expect(res.statusCode).toBe(200);
 			expect(res.body).toEqual(mockSearchResults);
-		});
-
-		it('실적현황 검색 중 오류 발생 시 처리', async () => {
-			ReportService.searchReports.mockRejectedValue(new Error('Error searching reports'));
-
-			const res = await request(app).get('/reports/search').query({ query: 'Error' });
-			expect(res.statusCode).toBe(500);
 		});
 	});
 
 	describe('GET /reports/:reportId', () => {
 		it('ID로 실적현황 조회', async () => {
-			const mockReport = { id: 1, title: 'title1', content: 'content1' };
+			const mockReport = { id: 1, title: 'title1', year: 2024, start_date: '2024-11-11', end_date: '2024-12-12'};
 			ReportService.getReportById.mockResolvedValue(mockReport);
 
 			const res = await request(app).get('/reports/1');
@@ -73,10 +66,10 @@ describe('ReportController Integration Tests', () => {
 
 	describe('POST /reports', () => {
 		it('새로운 실적현황 생성', async () => {
-			const mockReport = { title: 'New Report', content: 'New Content' };
+			const mockReport = { title: 'title1', year: 2024};
 			ReportService.createReport.mockResolvedValue(mockReport);
 
-			const res = await request(app).post('/reports').send({ title: 'New Report', content: 'New Content' });
+			const res = await request(app).post('/reports').send({ title: 'title1', year: 2024 });
 			expect(res.statusCode).toBe(201);
 		});
 
@@ -90,10 +83,10 @@ describe('ReportController Integration Tests', () => {
 
 	describe('PUT /reports/:reportId', () => {
 		it('기존 실적현황 업데이트', async () => {
-			const mockReport = { id: 1, title: 'Updated Report', content: 'Updated Content' };
+			const mockReport = { id: 1, title: 'title1', year: 2024, start_date: '2024-11-11', end_date: '2024-12-12'};
 			ReportService.editReport.mockResolvedValue(mockReport);
 
-			const res = await request(app).put('/reports/1').send({ title: 'Updated Report' });
+			const res = await request(app).put('/reports/1').send({ title: 'Updated title' });
 			expect(res.statusCode).toBe(200);
 			expect(res.body).toEqual(mockReport);
 		});

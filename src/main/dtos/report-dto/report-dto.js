@@ -1,8 +1,10 @@
 class ReportDto {
-    constructor({ author, title, content }) {
-        this.author = author;
+    constructor({ title, year, start_date, end_date, note }) {
         this.title = title;
-        this.content = content;
+        this.year = year;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.note = note;
     }
 }
 
