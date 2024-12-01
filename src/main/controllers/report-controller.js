@@ -1,14 +1,10 @@
 const ReportDto = require('@dtos/report-dto/report-dto');
 const ReportService = require('@services/report-service');
-const ReportFileDto = require('@dtos/report-dto/report-file-dto');
-const Pagination = require('@utils/pagination');
-const SearchParameters = require('@utils/search-parameters');
 
 class ReportController {
     static async getAllReports(req, res, next) {
         try {
-            const pagination = new Pagination(req.query.page, req.query.limit);
-            const reportResDtos = await ReportService.getAllReports(pagination);
+            const reportResDtos = await ReportService.getAllReports();
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);
@@ -25,12 +21,10 @@ class ReportController {
         }
     }
 
-    static async searchReports(req, res, next) {
+    static async getReportByYear(req, res, next) {
         try {
-            const pagination = new Pagination(req.query.page, req.query.limit);
-            const searchParams = new SearchParameters(req.query.query, req.query.searchBy);
-
-            const reportResDtos = await ReportService.searchReports(pagination, searchParams);
+            const { year } = req.params;
+            const reportResDtos = await ReportService.getReportByYear(year);
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);
@@ -41,9 +35,7 @@ class ReportController {
         try {
             const { reportId } = req.params;
             const reportDto = new ReportDto(req.body);
-            const reportFileDto = new ReportFileDto(req.files);
-
-            const reportResDto = await ReportService.editReport(reportId, reportDto, reportFileDto);
+            const reportResDto = await ReportService.editReport(reportId, reportDto);
 
             res.status(200).json(reportResDto);
         } catch (error) {
@@ -54,8 +46,7 @@ class ReportController {
     static async createReport(req, res, next) {
         try {
             const reportDto = new ReportDto(req.body);
-            const reportFileDto = new ReportFileDto(req.files);
-            const reportResDto = await ReportService.createReport(reportDto, reportFileDto);
+            const reportResDto = await ReportService.createReport(reportDto);
 
             res.status(201).json(reportResDto);
         } catch (error) {
@@ -69,16 +60,6 @@ class ReportController {
             await ReportService.deleteReport(reportId);
 
             res.status(200).json({ message: 'Report deleted successfully' });
-        } catch (error) {
-            next(error);
-        }
-    }
-    static async deleteFile(req, res, next) {
-        try {
-            const { reportFileId } = req.params;
-            await ReportService.deleteFile(reportFileId);
-
-            res.status(200).json({ message: 'ReportFile deleted successfully' });
         } catch (error) {
             next(error);
         }

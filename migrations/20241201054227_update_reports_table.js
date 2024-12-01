@@ -10,6 +10,7 @@ exports.up = async function (knex) {
 
 		table.date('start_date').notNullable();
 		table.date('end_date').notNullable();
+		table.integer('year').notNullable()
 		table.text('note');
 	});
 	await knex.schema.dropTableIfExists('report_files');
@@ -19,14 +20,6 @@ exports.up = async function (knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = async function (knex) {
-	await knex.schema.alterTable('reports', function (table) {
-		table.dropColumn('start_date');
-		table.dropColumn('end_date');
-		table.dropColumn('note');
-
-		table.string('author').notNullable();
-		table.text('content').notNullable();
-		table.timestamp('uploaded_at').defaultTo(knex.fn.now());
-	});
+exports.down =  function (knex) {
+	return knex.schema.dropTableIfExists('reports');
 };
