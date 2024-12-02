@@ -1,4 +1,4 @@
-class InquiryPublicResponseDto {
+class InquiryListResponseDto {
     constructor(inquiry) {
         this.id = inquiry.id;
         this.author = inquiry.author;
@@ -7,4 +7,4 @@ class InquiryPublicResponseDto {
     }
 }
 
-module.exports = InquiryPublicResponseDto;
+module.exports = InquiryListResponseDto;

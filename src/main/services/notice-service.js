@@ -4,6 +4,7 @@ const Notice = require('@models/notice/notice');
 const Exception = require('@exceptions/exception');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const createSearchQuery = require('@utils/search-query-builder');
+const NoticeListResDto = require("@dtos/notice-dto/notice-list-res-dto");
 
 class NoticeService {
     static async getAllNotices(pagination) {
@@ -14,9 +15,9 @@ class NoticeService {
         const totalCount = totalItemsResult.count;
 
         const notices = await db('notices').limit(limit).offset(offset);
-        const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
+        const noticeListResDtos = notices.map(notice => new NoticeListResDto(notice));
         return {
-            items: noticeResDtos,
+            items: noticeListResDtos,
             pagination: pagination.getPaginationInfo(totalCount),
         };
     }

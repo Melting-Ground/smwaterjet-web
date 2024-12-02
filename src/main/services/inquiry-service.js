@@ -1,7 +1,7 @@
 const db = require('@configs/knex');
 const Inquiry = require("@models/inquiry/inquiry");
 const InquiryResDto = require("@dtos/inquiry-dto/inquiry-res-dto");
-const InquiryPublicResDto = require("@dtos/inquiry-dto/inquiry-public-res-dto");
+const InquiryListResDto = require("@dtos/inquiry-dto/inquiry-list-res-dto");
 const Exception = require('@exceptions/exception');
 const fileDeleteUtil = require('@utils/file-delete-util');
 const argon2 = require('argon2');
@@ -16,9 +16,9 @@ class InquiryService {
         const totalCount = totalItemsResult.count;
 
         const inquiries = await db('inquiries').limit(limit).offset(offset);
-        const inquiryPublicResDtos = inquiries.map(inquiry => new InquiryPublicResDto(inquiry));
+        const inquiryListResDtos = inquiries.map(inquiry => new InquiryListResDto(inquiry));
         return {
-            items: inquiryPublicResDtos,
+            items: inquiryListResDtos,
             pagination: pagination.getPaginationInfo(totalCount),
         };
     }
