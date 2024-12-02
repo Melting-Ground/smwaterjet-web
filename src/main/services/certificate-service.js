@@ -5,10 +5,19 @@ const Exception = require('@exceptions/exception');
 const fileDeleteUtil = require('@utils/file-delete-util');
 
 class CertificateService {
-    static async getAllCertificates() {
-        const certificates = await db('certificates');
+    static async getAllCertificates(pagination) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
+
+        const totalItemsResult = await db('certificates').count('id as count').first();
+        const totalCount = totalItemsResult.count;
+
+        const certificates = await db('certificates').limit(limit).offset(offset);
         const certiResDtos = certificates.map(cert => new CertiResDto(cert));
-        return certiResDtos;
+        return {
+            items: certiResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async getCertificateById(id) {

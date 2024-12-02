@@ -1,9 +1,9 @@
 class InquiryListResponseDto {
-    constructor(inquiry) {
-        this.id = inquiry.id;
-        this.author = inquiry.author;
-        this.title = inquiry.title;
-        this.created_at = inquiry.created_at;
+    constructor({ id, author, title, created_at }) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.created_at = created_at;
     }
 }
 
