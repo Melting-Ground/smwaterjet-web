@@ -12,9 +12,15 @@ class InquiryService {
         const offset = pagination.getOffset();
         const limit = pagination.limit;
 
+        const totalItemsResult = await db('inquiries').count('id as count').first();
+        const totalCount = totalItemsResult.count;
+
         const inquiries = await db('inquiries').limit(limit).offset(offset);
         const inquiryPublicResDtos = inquiries.map(inquiry => new InquiryPublicResDto(inquiry));
-        return inquiryPublicResDtos;
+        return {
+            items: inquiryPublicResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async getInquiryById(id) {

@@ -1,5 +1,5 @@
 class InquiryDto {
-    constructor({author, password, phone_number, email, title, content}) {
+    constructor({ author, password, phone_number, email, title, content }) {
         this.author = author;
         this.password = password;
         this.phone_number = phone_number;

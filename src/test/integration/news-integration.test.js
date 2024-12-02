@@ -15,9 +15,9 @@ jest.mock('@services/news-service');
 
 describe('NewsController Integration Tests', () => {
 	afterEach(() => {
-        jest.clearAllMocks();
-    });
-	
+		jest.clearAllMocks();
+	});
+
 	describe('GET /news', () => {
 		it('전체 뉴스 목록 조회', async () => {
 			const mockNewsList = [

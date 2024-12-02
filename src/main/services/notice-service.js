@@ -10,9 +10,15 @@ class NoticeService {
         const offset = pagination.getOffset();
         const limit = pagination.limit;
 
+        const totalItemsResult = await db('notices').count('id as count').first();
+        const totalCount = totalItemsResult.count;
+
         const notices = await db('notices').limit(limit).offset(offset);
         const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
-        return noticeResDtos;
+        return {
+            items: noticeResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async getNoticeById(id, isViewed) {

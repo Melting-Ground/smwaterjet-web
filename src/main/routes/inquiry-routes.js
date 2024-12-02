@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/', InquiryController.getAllInquiries);
 router.get('/search', InquiryController.searchInquiries);
-router.get('/:inquiryId', authHandler , InquiryController.getInquiryById);
+router.get('/:inquiryId', authHandler, InquiryController.getInquiryById);
 
 router.post('/', upload.array('files', 5), InquiryController.createInquiry);
 
