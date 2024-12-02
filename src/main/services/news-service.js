@@ -8,9 +8,15 @@ class NewsService {
         const offset = pagination.getOffset();
         const limit = pagination.limit;
 
+        const totalItemsResult = await db('news').count('id as count').first();
+        const totalCount = totalItemsResult.count;
+
         const news = await db('news').limit(limit).offset(offset);
         const newsResDtos = news.map(news => new NewsResDto(news));
-        return newsResDtos;
+        return {
+            items: newsResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async createNews(newsDto) {
