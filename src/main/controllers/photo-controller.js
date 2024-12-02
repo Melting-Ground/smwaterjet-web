@@ -1,10 +1,12 @@
 const PhotoDto = require("@dtos/photo-dto/photo-dto");
 const PhotoService = require("@services/photo-service");
+const Pagination = require('@utils/pagination');
 
 class PhotoController {
     static async getAllPhotos(req, res, next) {
         try {
-            const photoResDtos = await PhotoService.getAllPhotos();
+            const pagination = new Pagination(req.query.page, req.query.limit);
+            const photoResDtos = await PhotoService.getAllPhotos(pagination);
             res.status(200).json(photoResDtos);
         } catch (error) {
             next(error);
@@ -23,8 +25,9 @@ class PhotoController {
 
     static async getPhotosByYear(req, res, next) {
         try {
+            const pagination = new Pagination(req.query.page, req.query.limit);
             const { year } = req.params;
-            const photoResDtos = await PhotoService.getPhotosByYear(year);
+            const photoResDtos = await PhotoService.getPhotosByYear(year, pagination);
             res.status(200).json(photoResDtos);
         } catch (error) {
             next(error);
