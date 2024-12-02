@@ -5,10 +5,19 @@ const fileDeleteUtil = require('@utils/file-delete-util');
 const Exception = require('@exceptions/exception');
 
 class PhotoService {
-    static async getAllPhotos() {
-        const photos = await db('photos');
+    static async getAllPhotos(pagination) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
+
+        const totalItemsResult = await db('photos').count('id as count').first();
+        const totalCount = totalItemsResult.count;
+
+        const photos = await db('photos').limit(limit).offset(offset);
         const photoResDtos = photos.map(photo => new PhotoResDto(photo));
-        return photoResDtos;
+        return {
+            items: photoResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async getPhotoById(id) {
@@ -19,10 +28,19 @@ class PhotoService {
         return new PhotoResDto(photo);
     }
 
-    static async getPhotosByYear(year) {
-        const photos = await db('photos').where({ year: year });
+    static async getPhotosByYear(year, pagination) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
+
+        const totalItemsResult = await db('photos').where({ year: year }).count('id as count').first();
+        const totalCount = totalItemsResult.count;
+
+        const photos = await db('photos').where({ year: year }).limit(limit).offset(offset);
         const photoResDtos = photos.map(photo => new PhotoResDto(photo));
-        return photoResDtos;
+        return {
+            items: photoResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async createPhoto(photoDto) {

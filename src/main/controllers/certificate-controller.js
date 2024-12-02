@@ -1,15 +1,18 @@
 const CertificateDto = require('@dtos/certificate-dto/certificate-dto');
 const CertificateService = require('@services/certificate-service');
+const Pagination = require('@utils/pagination');
 
 class CertificateController {
     static async getAllCertificates(req, res, next) {
         try {
-            const certiResDtos = await CertificateService.getAllCertificates();
+            const pagination = new Pagination(req.query.page, req.query.limit);
+            const certiResDtos = await CertificateService.getAllCertificates(pagination);
             res.status(200).json(certiResDtos);
         } catch (error) {
             next(error);
         }
     }
+
     static async getCertificateById(req, res, next) {
         try {
             const { certificateId } = req.params;
@@ -19,6 +22,7 @@ class CertificateController {
             next(error);
         }
     }
+    
     static async createCertificate(req, res, next) {
         try {
             const filePath = req.file.path;

@@ -48,7 +48,7 @@ describe('PhotoController Integration Tests', () => {
 			PhotoService.getPhotoById.mockRejectedValue(new Error('Photo not found'));
 
 			const res = await request(app).get('/photos/999');
-            expect(res.statusCode).toBe(500);
+			expect(res.statusCode).toBe(500);
 		});
 	});
 

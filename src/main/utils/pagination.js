@@ -14,6 +14,19 @@ class Pagination {
 	getOffset() {
 		return (this.page - 1) * this.limit;
 	}
+	
+	getPaginationInfo(totalItems) {
+		const lastPage = Math.ceil(totalItems / this.limit);
+
+		return {
+			currentPage: this.page,
+			lastPage,
+			totalItems,
+			limit: this.limit,
+			hasNextPage: this.page < lastPage,
+			hasPreviousPage: this.page > 1,
+		};
+	}
 }
 
 module.exports = Pagination;
