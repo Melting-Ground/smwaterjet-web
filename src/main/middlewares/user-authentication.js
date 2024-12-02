@@ -10,15 +10,15 @@ const userAuthenticate = async (req, res, next) => {
             throw new Exception('BadRequestException', 'Password query parameter is required');
         }
 
-        const user = await db('inquiries').where({ id: inquiryId }).select('password').first();
+        const inquiry = await db('inquiries').where({ id: inquiryId }).select('password').first();
 
-        if (user == null) {
+        if (inquiry == null) {
             throw new Exception('ValueNotFoundException', 'Inquiry is not found');
         }
 
-        const isPasswordValid = await argon2.verify(user.password, password);
-
-        if (isPasswordValid == null) {
+        const isPasswordValid = await argon2.verify(inquiry.password, password);
+        
+        if (isPasswordValid == false) {
             throw new Exception('AuthenticationException', 'Invalid password');
         }
         next();
