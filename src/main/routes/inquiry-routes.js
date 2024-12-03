@@ -13,9 +13,9 @@ router.get('/:inquiryId', authHandler, InquiryController.getInquiryById);
 
 router.post('/', upload.array('files', 5), InquiryController.createInquiry);
 
-router.put('/:inquiryId', authHandler, upload.array('newFiles', 5), InquiryController.editInquiry);
+router.put('/:inquiryId', upload.array('newFiles', 5), InquiryController.editInquiry);
 
-router.delete('/files/:inquiryFileId', authHandler, InquiryController.deleteFile);
+router.delete('/files/:inquiryFileId', InquiryController.deleteFile);
 router.delete('/:inquiryId', authHandler, InquiryController.deleteInquiry);
 
 module.exports = router;
