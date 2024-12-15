@@ -2,9 +2,9 @@ require('dotenv').config();
 require('module-alias/register');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const exceptionHandler = require('@middlewares/exception-handler');
-
 const express = require('express');
+
+const exceptionHandler = require('@middlewares/exception-handler');
 const setClientIP = require('@middlewares/client-ip');
 const adminRoutes = require('@routes/admin-routes');
 const certificateRoutes = require('@routes/certificate-routes');
@@ -13,6 +13,8 @@ const reportRoutes = require('@routes/report-routes');
 const inquiryRoutes = require('@routes/inquiry-routes');
 const noticeRoutes = require('@routes/notice-routes');
 const newsRoutes = require('@routes/news-routes');
+const turnstileRoutes = require('@routes/turnstile-routes');
+
 
 const app = express();
 app.use(cookieParser());
@@ -27,6 +29,7 @@ const path = require('path');
 const uploadsPath = path.join(__dirname, '../../public');
 app.use('/public', express.static(uploadsPath));
 
+app.use('/turnstile', turnstileRoutes)
 app.use('/admins', adminRoutes);
 app.use('/company', certificateRoutes);
 app.use('/performance/photos', photoRoutes);

@@ -18,6 +18,10 @@ const exceptionHandler = (err, req, res, next) => {
         return res.status(409).json({ message: err.message });
     }
 
+    if (err.name === 'UnprocessableEntityException') {
+        return res.status(422).json({ message: err.message });
+    }
+
     res.status(500).json({ message: 'Internal Server Error' });
 };
 
