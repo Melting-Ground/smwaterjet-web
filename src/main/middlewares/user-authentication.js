@@ -5,9 +5,9 @@ const Exception = require('@exceptions/exception');
 const userAuthenticate = async (req, res, next) => {
     try {
         const { inquiryId } = req.params;
-        const { password } = req.query;
+        const password = req.headers['password'];
         if (password == null) {
-            throw new Exception('BadRequestException', 'Password query parameter is required');
+            throw new Exception('BadRequestException', 'Password is required');
         }
 
         const inquiry = await db('inquiries').where({ id: inquiryId }).select('password').first();
