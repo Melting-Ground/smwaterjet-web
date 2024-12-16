@@ -41,10 +41,17 @@ class NoticeService {
         const limit = pagination.limit;
 
         let noticesQuery = createSearchQuery('notices', searchParams);
+
+        const totalItemsResult = await noticesQuery.clone().count('id as count').first();
+        const totalCount = totalItemsResult.count;
+
         const notices = await noticesQuery.limit(limit).offset(offset);
         const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
 
-        return noticeResDtos;
+        return {
+            items: noticeResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async createNotice(noticeDto, noticeFileDto) {
@@ -61,7 +68,7 @@ class NoticeService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new NoticeResDto({id: insertedId, ...newNotice}, filePaths);
+        return new NoticeResDto({ id: insertedId, ...newNotice }, filePaths);
     }
 
     static async editNotice(id, noticeDto, noticeFileDto) {

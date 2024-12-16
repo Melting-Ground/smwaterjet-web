@@ -38,10 +38,17 @@ class InquiryService {
         const limit = pagination.limit;
 
         let inquiriesQuery = createSearchQuery('inquiries', searchParams);
-        const inquiries = await inquiriesQuery.limit(limit).offset(offset);
-        const inquiryPublicResDtos = inquiries.map(inquiry => new InquiryPublicResDto(inquiry));
 
-        return inquiryPublicResDtos;
+        const totalItemsResult = await inquiriesQuery.clone().count('id as count').first();
+        const totalCount = totalItemsResult.count;
+
+        const inquiries = await inquiriesQuery.limit(limit).offset(offset);
+        const inquiryPublicResDtos = inquiries.map(inquiry => new InquiryListResDto(inquiry));
+
+        return {
+            items: inquiryPublicResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async createInquiry(inquiryDto, inquiryFileDto) {

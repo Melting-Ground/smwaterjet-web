@@ -4,10 +4,19 @@ const ReportResDto = require("@dtos/report-dto/report-res-dto");
 const Exception = require('@exceptions/exception');
 
 class ReportService {
-    static async getAllReports() {
-        const reports = await db('reports');
+    static async getAllReports(pagination) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
+
+        const totalItemsResult = await db('reports').count('id as count').first();
+        const totalCount = totalItemsResult.count;
+
+        const reports = await db('reports').limit(limit).offset(offset);
         const reportResDtos = reports.map(report => new ReportResDto(report));
-        return reportResDtos;
+        return {
+            items: reportResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async getReportById(id) {
@@ -38,7 +47,7 @@ class ReportService {
     static async createReport(reportDto) {
         const newReport = new Report(reportDto);
         const [insertedId] = await db('reports').insert(newReport);
-        return new ReportResDto({id: insertedId, ...newReport});
+        return new ReportResDto({ id: insertedId, ...newReport });
     }
 
     static async deleteReport(id) {

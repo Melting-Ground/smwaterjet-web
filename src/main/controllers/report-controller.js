@@ -4,7 +4,8 @@ const ReportService = require('@services/report-service');
 class ReportController {
     static async getAllReports(req, res, next) {
         try {
-            const reportResDtos = await ReportService.getAllReports();
+            const pagination = new Pagination(req.query.page, req.query.limit);
+            const reportResDtos = await ReportService.getAllReports(pagination);
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);
