@@ -61,7 +61,7 @@ class NoticeService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new NoticeResDto(newNotice, filePaths);
+        return new NoticeResDto({id: insertedId, ...newNotice}, filePaths);
     }
 
     static async editNotice(id, noticeDto, noticeFileDto) {

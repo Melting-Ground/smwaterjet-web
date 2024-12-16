@@ -45,8 +45,8 @@ class PhotoService {
 
     static async createPhoto(photoDto) {
         const newPhoto = new Photo(photoDto);
-        await db('photos').insert(newPhoto);
-        return new PhotoResDto(newPhoto);
+        const [insertedId] = await db('photos').insert(newPhoto);
+        return new PhotoResDto({id: insertedId, ...newPhoto});
     }
 
     static async editPhoto(id, photoDto) {
