@@ -4,7 +4,6 @@ const creatMulter = require("@configs/multer-config");
 const authHandler = require('@middlewares/authentication-handler');
 
 const upload = creatMulter('inquiries');
-
 const router = express.Router();
 
 router.get('/', InquiryController.getAllInquiries);
