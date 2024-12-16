@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 
+const app = express();
 const exceptionHandler = require('@middlewares/exception-handler');
 const setClientIP = require('@middlewares/client-ip');
 const adminRoutes = require('@routes/admin-routes');
@@ -15,8 +16,6 @@ const noticeRoutes = require('@routes/notice-routes');
 const newsRoutes = require('@routes/news-routes');
 const turnstileRoutes = require('@routes/turnstile-routes');
 
-
-const app = express();
 app.use(cookieParser());
 app.use(cors());
 
