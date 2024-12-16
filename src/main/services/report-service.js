@@ -37,8 +37,8 @@ class ReportService {
 
     static async createReport(reportDto) {
         const newReport = new Report(reportDto);
-        await db('reports').insert(newReport);
-        return new ReportResDto(newReport);
+        const [insertedId] = await db('reports').insert(newReport);
+        return new ReportResDto({id: insertedId, ...newReport});
     }
 
     static async deleteReport(id) {

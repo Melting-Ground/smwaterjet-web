@@ -63,7 +63,7 @@ class InquiryService {
             });
             await Promise.all(fileInsertPromises);
         }
-        return new InquiryResDto(newInquiry, filePaths);
+        return new InquiryResDto({ id: insertedId, ...newInquiry }, filePaths);
     }
 
     static async editInquiry(id, inquiryDto, inquiryFileDto) {

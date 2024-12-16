@@ -30,8 +30,8 @@ class CertificateService {
 
     static async createCertificate(certificateDto) {
         const newCertificate = new Certificate(certificateDto);
-        await db('certificates').insert(newCertificate);
-        const certiResDto = new CertiResDto(newCertificate);
+        const [insertedId] =  await db('certificates').insert(newCertificate);
+        const certiResDto = new CertiResDto({ id: insertedId, ...newCertificate});
         return certiResDto;
     }
 
