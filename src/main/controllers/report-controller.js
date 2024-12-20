@@ -13,16 +13,6 @@ class ReportController {
         }
     }
 
-    static async getReportById(req, res, next) {
-        try {
-            const { reportId } = req.params;
-            const reportResDto = await ReportService.getReportById(reportId);
-            res.status(200).json(reportResDto);
-        } catch (error) {
-            next(error);
-        }
-    }
-
     static async getReportByYear(req, res, next) {
         try {
             const { year } = req.params;

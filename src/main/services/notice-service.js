@@ -46,7 +46,7 @@ class NoticeService {
         const totalCount = totalItemsResult.count;
 
         const notices = await noticesQuery.limit(limit).offset(offset);
-        const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
+        const noticeResDtos = notices.map(notice => new NoticeListResDto(notice));
 
         return {
             items: noticeResDtos,

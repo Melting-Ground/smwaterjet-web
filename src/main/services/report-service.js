@@ -8,10 +8,10 @@ class ReportService {
         const offset = pagination.getOffset();
         const limit = pagination.limit;
 
-        const totalItemsResult = await db('reports').count('id as count').first();
+        const totalItemsResult = await db('reports_view').count('id as count').first();
         const totalCount = totalItemsResult.count;
 
-        const reports = await db('reports').limit(limit).offset(offset);
+        const reports = await db('reports_view').limit(limit).offset(offset);
         const reportResDtos = reports.map(report => new ReportResDto(report));
         return {
             items: reportResDtos,
@@ -19,17 +19,8 @@ class ReportService {
         };
     }
 
-    static async getReportById(id) {
-        const report = await db('reports').where({ id }).first();
-        if (report == null) {
-            throw new Exception('ValueNotFoundException', 'Report is not found');
-        }
-        const reportResDto = new ReportResDto(report);
-        return reportResDto;
-    }
-
     static async getReportByYear(year) {
-        const reports = await db('reports').where({ year: year });
+        const reports = await db('reports_view').where({ year: year });
         const reportResDtos = reports.map(report => new ReportResDto(report));
         return reportResDtos;
     }
