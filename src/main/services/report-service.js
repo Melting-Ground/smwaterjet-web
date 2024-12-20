@@ -18,6 +18,15 @@ class ReportService {
             pagination: pagination.getPaginationInfo(totalCount),
         };
     }
+    
+    static async getReportById(id) {
+        const report = await db('reports').where({ id }).first();
+        if (report == null) {
+            throw new Exception('ValueNotFoundException', 'Report is not found');
+        }
+        const reportResDto = new ReportResDto(report);
+        return reportResDto;
+    }
 
     static async getReportByYear(year, pagination) {
         const offset = pagination.getOffset();

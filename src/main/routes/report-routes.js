@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.get('/', ReportController.getAllReports);
 router.get('/year/:year', ReportController.getReportByYear);
+router.get('/:reportId', ReportController.getReportById);
 
 router.put('/:reportId', authenticate, upload.none(), ReportController.editReport);
 
