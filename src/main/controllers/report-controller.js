@@ -1,5 +1,6 @@
 const ReportDto = require('@dtos/report-dto/report-dto');
 const ReportService = require('@services/report-service');
+const Pagination = require('@utils/pagination');
 
 class ReportController {
     static async getAllReports(req, res, next) {

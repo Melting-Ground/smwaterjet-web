@@ -1,5 +1,6 @@
 class NoticeListResponseDto {
-	constructor({id, author, title, count, created_at}) {
+	constructor({row_num, id, author, title, count, created_at}) {
+		this.row_num = row_num;
 		this.id = id;
 		this.author = author;
 		this.title = title;
