@@ -15,8 +15,9 @@ class ReportController {
 
     static async getReportByYear(req, res, next) {
         try {
+            const pagination = new Pagination(req.query.page, req.query.limit);
             const { year } = req.params;
-            const reportResDtos = await ReportService.getReportByYear(year);
+            const reportResDtos = await ReportService.getReportByYear(year, pagination);
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);

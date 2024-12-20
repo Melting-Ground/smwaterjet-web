@@ -7,9 +7,9 @@ exports.up = function(knex) {
         CREATE OR REPLACE VIEW reports_view AS
         SELECT 
             ROW_NUMBER() OVER (ORDER BY id) AS row_num,
+			id,
             title,
 			year,
-			title,
 			start_date,
 			end_date,
 			note

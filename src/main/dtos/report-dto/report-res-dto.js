@@ -1,5 +1,6 @@
 class ReportResponseDto {
-    constructor({ id, title, year, start_date, end_date, note }) {
+    constructor({ row_num, id, title, year, start_date, end_date, note }) {
+        this.row_num = row_num;
         this.id = id;
         this.title = title;
         this.year = year;

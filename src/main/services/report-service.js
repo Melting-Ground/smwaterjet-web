@@ -19,10 +19,24 @@ class ReportService {
         };
     }
 
-    static async getReportByYear(year) {
-        const reports = await db('reports_view').where({ year: year });
+    static async getReportByYear(year, pagination) {
+        const offset = pagination.getOffset();
+        const limit = pagination.limit;
+
+        const totalItemsResult = await db('reports_view')
+            .where({ year: year })
+            .count('id as count')
+            .first();
+        const totalCount = totalItemsResult.count;
+        const reports = await db('reports_view')
+            .where({ year: year })
+            .limit(limit)
+            .offset(offset);
         const reportResDtos = reports.map(report => new ReportResDto(report));
-        return reportResDtos;
+        return {
+            items: reportResDtos,
+            pagination: pagination.getPaginationInfo(totalCount),
+        };
     }
 
     static async editReport(id, reportDto) {
