@@ -11,10 +11,10 @@ class NoticeService {
         const offset = pagination.getOffset();
         const limit = pagination.limit;
 
-        const totalItemsResult = await db('notices').count('id as count').first();
+        const totalItemsResult = await db('notices_view').count('id as count').first();
         const totalCount = totalItemsResult.count;
 
-        const notices = await db('notices').limit(limit).offset(offset);
+        const notices = await db('notices_view').limit(limit).offset(offset);
         const noticeListResDtos = notices.map(notice => new NoticeListResDto(notice));
         return {
             items: noticeListResDtos,
@@ -40,13 +40,13 @@ class NoticeService {
         const offset = pagination.getOffset();
         const limit = pagination.limit;
 
-        let noticesQuery = createSearchQuery('notices', searchParams);
+        const noticesQuery = createSearchQuery('notices_view', searchParams);
 
         const totalItemsResult = await noticesQuery.clone().count('id as count').first();
         const totalCount = totalItemsResult.count;
 
         const notices = await noticesQuery.limit(limit).offset(offset);
-        const noticeResDtos = notices.map(notice => new NoticeResDto(notice));
+        const noticeResDtos = notices.map(notice => new NoticeListResDto(notice));
 
         return {
             items: noticeResDtos,

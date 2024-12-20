@@ -12,10 +12,10 @@ class InquiryService {
         const offset = pagination.getOffset();
         const limit = pagination.limit;
 
-        const totalItemsResult = await db('inquiries').count('id as count').first();
+        const totalItemsResult = await db('inquiries_view').count('id as count').first();
         const totalCount = totalItemsResult.count;
 
-        const inquiries = await db('inquiries').limit(limit).offset(offset);
+        const inquiries = await db('inquiries_view').limit(limit).offset(offset);
         const inquiryListResDtos = inquiries.map(inquiry => new InquiryListResDto(inquiry));
         return {
             items: inquiryListResDtos,
@@ -37,7 +37,7 @@ class InquiryService {
         const offset = pagination.getOffset();
         const limit = pagination.limit;
 
-        let inquiriesQuery = createSearchQuery('inquiries', searchParams);
+        const inquiriesQuery = createSearchQuery('inquiries_view', searchParams);
 
         const totalItemsResult = await inquiriesQuery.clone().count('id as count').first();
         const totalCount = totalItemsResult.count;

@@ -1,5 +1,6 @@
 const ReportDto = require('@dtos/report-dto/report-dto');
 const ReportService = require('@services/report-service');
+const Pagination = require('@utils/pagination');
 
 class ReportController {
     static async getAllReports(req, res, next) {
@@ -12,20 +13,11 @@ class ReportController {
         }
     }
 
-    static async getReportById(req, res, next) {
-        try {
-            const { reportId } = req.params;
-            const reportResDto = await ReportService.getReportById(reportId);
-            res.status(200).json(reportResDto);
-        } catch (error) {
-            next(error);
-        }
-    }
-
     static async getReportByYear(req, res, next) {
         try {
+            const pagination = new Pagination(req.query.page, req.query.limit);
             const { year } = req.params;
-            const reportResDtos = await ReportService.getReportByYear(year);
+            const reportResDtos = await ReportService.getReportByYear(year, pagination);
             res.status(200).json(reportResDtos);
         } catch (error) {
             next(error);
